@@ -53,6 +53,33 @@ details li{margin:4px 0}
 .res{font-size:20px;color:var(--ink);font-weight:600}
 .note{font-size:14px;color:var(--muted);margin-top:30px;border-top:1px dashed var(--muted);padding-top:12px}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+:root{--l:40%}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--l:70%}}
+:root[data-theme="dark"]{--l:70%}
+h1{background:linear-gradient(90deg,#e91e63,#ff9800,#2196f3,#8e24aa);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.bar{height:12px;border-radius:8px}
+.bar i{background:linear-gradient(90deg,#ff5f6d,#ffc371,#47d18c,#4facfe)}
+.ded{background:linear-gradient(135deg,color-mix(in srgb,#ff6fa5 18%,var(--card)),color-mix(in srgb,#ffb74d 18%,var(--card)));box-shadow:0 6px 18px color-mix(in srgb,var(--margin) 22%,transparent)}
+.cheer{background:linear-gradient(90deg,#ff6fa5,#ff9800);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;font-size:18px}
+nav button{--hc:hsl(var(--h,230) 70% var(--l));border-color:var(--hc);background:color-mix(in srgb,var(--hc) 13%,var(--paper));color:var(--hc);transition:transform .15s}
+nav button:hover{transform:translateY(-2px)}
+nav button[aria-pressed=true]{background:var(--hc);color:#fff}
+h2{color:hsl(var(--h,230) 70% var(--l));padding-left:10px;border-left:6px solid hsl(var(--h,230) 75% 55%)}
+details{--hc:hsl(var(--h,230) 70% var(--l));border-left-color:var(--hc);background:color-mix(in srgb,var(--hc) 5%,var(--card));border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:transform .15s,box-shadow .15s}
+details:hover{transform:translateY(-2px)}
+details[open]{box-shadow:0 6px 18px color-mix(in srgb,var(--hc) 25%,transparent)}
+summary{color:var(--hc)}
+details.done{border-left-color:var(--done)}
+details.done summary>span::after{content:" ✅"}
+.sec h3{color:var(--hc);border-bottom:2px dashed var(--hc)}
+.sub h4{color:hsl(calc(var(--h,230) + 160) 65% var(--l))}
+.sub h4::before{content:"▸ "}
+.op{transition:transform .12s,border-color .12s}
+.op:hover{border-color:var(--ink);transform:translateX(3px)}
+.go{background:linear-gradient(90deg,#e91e63,#ff9800);color:#fff}
+.cf{position:fixed;width:8px;height:8px;border-radius:2px;z-index:99;pointer-events:none;animation:cf .9s ease-out forwards}
+@keyframes cf{to{transform:translate(var(--dx),var(--dy)) rotate(360deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){details,nav button,.op{transition:none}details:hover,nav button:hover,.op:hover{transform:none}}
 </style>
 </head>
 <body>
@@ -178,17 +205,17 @@ function prog(){let a=0,d=0;S.forEach((s,i)=>s.t.forEach((t,j)=>{a++;if(done[i+"
 $("pb").style.width=(a?d/a*100:0)+"%";$("pt").textContent=d+" / "+a+T(" टॉपिक पढ़े गए"," topics completed");{const r=a?d/a:0;$("ch").textContent=d===0?T("आज पहला टॉपिक पढ़कर शुरुआत करो, रितु!","Start today with your first topic, Ritu!"):r<.25?T("बहुत बढ़िया शुरुआत, रितु! लगी रहो।","A great start, Ritu! Keep going."):r<.5?T("शाबाश रितु! तुम आगे बढ़ रही हो।","Well done, Ritu! You are making real progress."):r<1?T("कमाल! मंज़िल अब बहुत पास है।","Amazing! The finish line is very close."):T("तुमने सब पढ़ लिया, रितु! अब टेस्ट देकर जीत लो।","You have read everything, Ritu! Now take the test and win it.")}}
 function nav(){const n=$("nav");n.innerHTML="";
 [[T("सभी","All"),-1],...S.map((s,i)=>[nm(i),i]),[T("अभ्यास टेस्ट","Practice Test"),-2],[T("पुराने पेपर","Past Papers"),-3]].forEach(([l,i])=>{const b=document.createElement("button");b.textContent=l;
-b.setAttribute("aria-pressed",cur===i);b.onclick=()=>{cur=i;nav();render()};n.appendChild(b)})}
+b.setAttribute("aria-pressed",cur===i);b.style.setProperty("--h",i>=0?HU[i]:({"-1":250,"-2":340,"-3":30})[i]);b.onclick=()=>{cur=i;nav();render()};n.appendChild(b)})}
 function render(){if(cur===-2){quiz();return}if(cur===-3){pyq();return}const q=$("q").value.trim().toLowerCase(),L=$("list");L.innerHTML="";let any=false;
 S.forEach((s,i)=>{if(cur!==-1&&cur!==i)return;
 const items=s.t.map((t,j)=>[trn(i,j,t),j]).filter(([t])=>!q||(t[0]+t[1].join(" ")).toLowerCase().includes(q));
 if(!items.length)return;any=true;
-const h=document.createElement("h2");h.textContent=nm(i);L.appendChild(h);
-items.forEach(([t,j])=>{const k=i+"-"+j,d=document.createElement("details");if(done[k])d.className="done";if(q)d.open=true;
+const h=document.createElement("h2");h.textContent=nm(i);h.style.setProperty("--h",HU[i]);L.appendChild(h);
+items.forEach(([t,j])=>{const k=i+"-"+j,d=document.createElement("details");d.style.setProperty("--h",HU[i]);if(done[k])d.className="done";if(q)d.open=true;
 const sm=document.createElement("summary"),sp=document.createElement("span");sp.textContent=t[0];
 const lb=document.createElement("label"),cb=document.createElement("input");cb.type="checkbox";cb.checked=!!done[k];
 cb.onclick=e=>e.stopPropagation();
-cb.onchange=()=>{if(cb.checked)done[k]=1;else delete done[k];d.className=cb.checked?"done":"";save();prog()};
+cb.onchange=()=>{if(cb.checked)done[k]=1;else delete done[k];if(cb.checked)burst(cb);d.className=cb.checked?"done":"";save();prog()};
 lb.append(cb,T("पढ़ लिया","Mark as read"));lb.onclick=e=>e.stopPropagation();sm.append(sp,lb);d.appendChild(sm);
 const ul=document.createElement("ul");t[1].forEach(x=>{const li=document.createElement("li");li.textContent=x;ul.appendChild(li)});
 d.appendChild(t[2]?secs(t[2]):ul);L.appendChild(d)})});
@@ -363,11 +390,73 @@ S[0].t[3]=mk("अध्याय: रस",[
 {h:"4. अन्य रस",subs:[["वात्सल्य रस","स्थायी भाव वात्सल्य (संतान के प्रति स्नेह)। सूरदास की बाल-लीला इसका प्रमुख उदाहरण मानी जाती है। इसे दसवाँ रस कहा जाता है।"],["भक्ति रस","ईश्वर के प्रति प्रेम और श्रद्धा; कुछ आचार्य इसे ग्यारहवाँ रस मानते हैं।"]]},
 {h:"5. याद रखने की ट्रिक",subs:[["क्रम से जोड़ी","शृंगार–रति, हास्य–हास, करुण–शोक, रौद्र–क्रोध, वीर–उत्साह, भयानक–भय, वीभत्स–जुगुप्सा, अद्भुत–विस्मय, शांत–निर्वेद। दोनों सूचियाँ एक ही क्रम में याद करें।"]]}
 ]);
+S[0].t[4]=mk("अध्याय: कारक और विभक्ति",[
+{h:"1. कारक की परिभाषा",subs:[["परिभाषा","संज्ञा या सर्वनाम का क्रिया से जो संबंध होता है, उसे बताने वाले रूप को कारक कहते हैं। कारक बताने वाले चिह्न (ने, को, से आदि) को विभक्ति या परसर्ग कहते हैं।"],["कुल कारक","हिंदी में 8 कारक हैं: कर्ता, कर्म, करण, संप्रदान, अपादान, संबंध, अधिकरण, संबोधन।"]]},
+{h:"2. आठ कारक विस्तार से",subs:[
+["(1) कर्ता कारक (ने)","क्रिया को करने वाले को कर्ता कहते हैं। उदाहरण: राम ने खाना खाया। (खाने का काम राम ने किया)"],
+["(2) कर्म कारक (को)","जिस पर क्रिया का फल पड़े, वह कर्म है। उदाहरण: उसने मोहन को बुलाया।"],
+["(3) करण कारक (से, के द्वारा)","जिस साधन से क्रिया हो। उदाहरण: वह कलम से लिखता है।"],
+["(4) संप्रदान कारक (को, के लिए)","जिसके लिए क्रिया की जाए या जिसे कुछ दिया जाए। उदाहरण: माँ बच्चे के लिए फल लाई।"],
+["(5) अपादान कारक (से, अलग होने के अर्थ में)","जहाँ से अलगाव या दूरी का बोध हो। उदाहरण: पेड़ से पत्ता गिरा।"],
+["(6) संबंध कारक (का, के, की, रा, रे, री)","दो संज्ञाओं के बीच संबंध बताए। उदाहरण: राम का भाई।"],
+["(7) अधिकरण कारक (में, पर)","क्रिया के आधार या स्थान/समय का बोध। उदाहरण: पुस्तक मेज पर है।"],
+["(8) संबोधन कारक (हे, अरे, ओ)","किसी को पुकारने या सावधान करने के लिए। उदाहरण: हे ईश्वर! रक्षा करो।"]]},
+{h:"3. विभक्ति और कारक का मिलान",subs:[["क्रम से याद करें","प्रथमा – कर्ता (ने); द्वितीया – कर्म (को); तृतीया – करण (से, द्वारा); चतुर्थी – संप्रदान (को, के लिए); पंचमी – अपादान (से अलग); षष्ठी – संबंध (का, के, की); सप्तमी – अधिकरण (में, पर); संबोधन – हे, अरे।"]]},
+{h:"4. पहचान की ट्रिक",subs:[
+["‘से’ के दो मुख्य रूप","साधन के अर्थ में ‘से’ करण है (चाकू से काटा); अलग होने के अर्थ में ‘से’ अपादान है (घर से निकला)।"],
+["‘को’ के दो रूप","क्रिया का फल पड़े तो कर्म (उसे बुलाया); ‘के लिए’ का अर्थ हो तो संप्रदान (गरीबों को दान दिया)।"],
+["‘ने’ चिह्न","‘ने’ केवल कर्ता कारक का चिह्न है और सकर्मक क्रिया के भूतकाल में आता है।"]]},
+{h:"5. परीक्षा के महत्वपूर्ण प्रश्न",subs:[["कारक कितने हैं?","8"],["‘हे राम!’ में कौन-सा कारक?","संबोधन"],["‘वह घर से निकला’ में ‘से’ कौन-सा कारक?","अपादान"],["‘राम ने पत्र लिखा’ में ‘ने’ किस कारक का चिह्न है?","कर्ता"]]}
+]);
+S[0].t[5]=mk("अध्याय: शब्द ज्ञान और वाक्य शुद्धि",[
+{h:"1. पर्यायवाची शब्द",subs:[["परिभाषा","समान अर्थ वाले शब्दों को पर्यायवाची कहते हैं।"],["महत्वपूर्ण उदाहरण","सूर्य – रवि, दिनकर, भास्कर; चंद्रमा – शशि, सोम, राकेश; जल – पानी, नीर, वारि; पृथ्वी – धरा, भूमि, वसुधा; अग्नि – आग, अनल, पावक; कमल – पंकज, जलज, नीरज।"]]},
+{h:"2. विलोम (विपरीतार्थक) शब्द",subs:[["परिभाषा","विपरीत अर्थ वाले शब्दों को विलोम कहते हैं।"],["महत्वपूर्ण उदाहरण","आस्तिक – नास्तिक; उन्नति – अवनति; सम्मान – अपमान; स्वतंत्र – परतंत्र; आदि – अंत; सरल – कठिन; गुण – दोष; लाभ – हानि।"]]},
+{h:"3. अनेकार्थी शब्द",subs:[["परिभाषा","जिन शब्दों के एक से अधिक अर्थ हों।"],["उदाहरण","कनक – सोना, धतूरा; अर्थ – धन, मतलब; कल – बीता या आने वाला दिन, मशीन, चैन; हरि – विष्णु, सिंह, घोड़ा; उत्तर – जवाब, एक दिशा।"]]},
+{h:"4. वाक्यांश के लिए एक शब्द",subs:[["महत्वपूर्ण उदाहरण","जिसका कोई शत्रु न हो = अजातशत्रु; जो ईश्वर को माने = आस्तिक; जो ईश्वर को न माने = नास्तिक; जो पहले कभी न हुआ हो = अभूतपूर्व; सब कुछ जानने वाला = सर्वज्ञ; जिसका कोई स्वामी न हो = अनाथ; जो दूसरों पर उपकार करे = परोपकारी; जो आँखों के सामने हो = प्रत्यक्ष।"]]},
+{h:"5. मुहावरे और लोकोक्तियाँ",subs:[
+["दोनों में अंतर","मुहावरा वाक्यांश होता है और वाक्य में प्रयोग के समय रूप बदलता है; लोकोक्ति (कहावत) पूरा वाक्य होती है और अपने आप में पूर्ण अर्थ देती है।"],
+["मुहावरे","आँखों का तारा = बहुत प्यारा; नाक कटना = अपमान होना; दाँतों तले उँगली दबाना = आश्चर्य करना; आग बबूला होना = बहुत क्रोधित होना; हाथ मलना = पछताना।"],
+["लोकोक्तियाँ","नाच न जाने आँगन टेढ़ा = अपनी कमी का दोष दूसरों को देना; अधजल गगरी छलकत जाए = कम ज्ञान वाला ज़्यादा दिखावा करता है; ऊँट के मुँह में जीरा = आवश्यकता से बहुत कम; थोथा चना बाजे घना = दिखावा; जैसी करनी वैसी भरनी = कर्म के अनुसार फल।"]]},
+{h:"6. वाक्य शुद्धि",subs:[
+["क्रिया और लिंग संबंधी","गलत: मैंने रोटी खाया। सही: मैंने रोटी खाई। (‘ने’ वाले वाक्य में क्रिया कर्म के अनुसार बदलती है)"],
+["सर्वनाम संबंधी","गलत: मेरे को बुलाओ। सही: मुझे बुलाओ। गलत: आप आया। सही: आप आए।"],
+["वर्तनी संबंधी","गलत → सही: आशिर्वाद → आशीर्वाद; कवियित्री → कवयित्री; श्रृंगार → शृंगार; उपरोक्त → उपर्युक्त; अत्याधिक → अत्यधिक; सन्यासी → संन्यासी।"]]}
+]);
+S[0].t[6]=mk("अध्याय: लिंग और वचन के नियम",[
+{h:"1. लिंग",subs:[
+["परिभाषा","शब्द के जिस रूप से पुरुष या स्त्री जाति का बोध हो, उसे लिंग कहते हैं। हिंदी में दो लिंग हैं: पुल्लिंग और स्त्रीलिंग।"],
+["सामान्य नियम","नदियाँ, तिथियाँ और भाषाएँ प्रायः स्त्रीलिंग होती हैं (गंगा, पूर्णिमा, हिंदी)। पर्वत, देश और ग्रह प्रायः पुल्लिंग होते हैं (हिमालय, भारत, मंगल)।"],
+["अपवाद","दही, पानी, घी, मोती पुल्लिंग हैं। आत्मा, सेना, जनता, भीड़ स्त्रीलिंग हैं।"],
+["पुल्लिंग-स्त्रीलिंग रूप","लड़का – लड़की; शेर – शेरनी; माली – मालिन; धोबी – धोबिन; कवि – कवयित्री; बालक – बालिका; नौकर – नौकरानी।"]]},
+{h:"2. वचन",subs:[
+["परिभाषा","शब्द के जिस रूप से एक या अनेक का बोध हो, उसे वचन कहते हैं: एकवचन और बहुवचन।"],
+["बहुवचन बनाने के नियम","अकारांत पुल्लिंग: लड़का → लड़के। आकारांत स्त्रीलिंग: कविता → कविताएँ। अकारांत स्त्रीलिंग: रात → रातें, किताब → किताबें। इकारांत: तिथि → तिथियाँ। ईकारांत: नदी → नदियाँ।"],
+["सदा एकवचन","जनता, सोना, पानी, दूध, घी जैसे शब्द।"],
+["सदा बहुवचन","प्राण, आँसू, होश, दर्शन, हस्ताक्षर, लोग।"],
+["आदर के लिए बहुवचन","आदरणीय व्यक्ति के लिए बहुवचन क्रिया आती है: गुरुजी आए।"]]},
+{h:"3. सामान्य अशुद्धियाँ",subs:[["क्रिया का मेल","क्रिया कर्ता या कर्म के लिंग-वचन के अनुसार बदलती है। सही: उसने किताब पढ़ी। सही: सीता ने खाना खाया।"]]}
+]);
+S[0].t[7]=mk("अध्याय: उपसर्ग और प्रत्यय",[
+{h:"1. उपसर्ग",subs:[
+["परिभाषा","जो शब्दांश शब्द के पहले लगकर उसका अर्थ बदल दे या नया अर्थ दे, उसे उपसर्ग कहते हैं।"],
+["संस्कृत के उपसर्ग","प्र (प्रबल), परा (पराजय), अप (अपमान), सम् (संगम), अनु (अनुज), अव (अवगुण), निर् (निर्मल), दुर् (दुर्जन), वि (विदेश), आ (आगमन), नि (निवास), अधि (अधिकार), अति (अतिक्रमण), सु (सुजन), उत् (उत्कर्ष), अभि (अभिनव), प्रति (प्रतिदिन), परि (परिजन), उप (उपकार)। कुल 22 माने जाते हैं।"],
+["हिंदी के उपसर्ग","अ (अज्ञान), अन (अनपढ़), कु (कुपुत्र), नि (निडर), अध (अधपका), उन (उनतीस), भर (भरपेट)।"],
+["उर्दू-फ़ारसी के उपसर्ग","बे (बेईमान), ना (नादान), ला (लापरवाह), बद (बदनाम), कम (कमज़ोर), खुश (खुशबू), बा (बाइज़्ज़त)।"]]},
+{h:"2. प्रत्यय",subs:[
+["परिभाषा","जो शब्दांश शब्द के बाद जुड़कर नया शब्द या नया अर्थ बनाए, उसे प्रत्यय कहते हैं।"],
+["कृत् प्रत्यय (धातु से)","क्रिया की धातु में जुड़ते हैं। पढ़ + आई = पढ़ाई; लिख + आवट = लिखावट; चढ़ + आई = चढ़ाई; घट + ना = घटना।"],
+["तद्धित प्रत्यय (संज्ञा, विशेषण से)","संज्ञा या विशेषण में जुड़ते हैं। अपना + पन = अपनापन; मानव + ता = मानवता; बूढ़ा + पा = बुढ़ापा; चतुर + आई = चतुराई; ग़रीब + ई = ग़रीबी।"],
+["स्त्रीलिंग प्रत्यय","ई, इन, आनी, इका, नी: माली → मालिन; नौकर → नौकरानी; बालक → बालिका; शेर → शेरनी।"]]},
+{h:"3. उपसर्ग और प्रत्यय में अंतर",subs:[["याद रखें","उपसर्ग शब्द से पहले लगता है, प्रत्यय शब्द के बाद। उपसर्ग से शब्द का अर्थ बदलता है (वि + देश = विदेश), प्रत्यय से नया शब्द बनता है (मानव + ता = मानवता)।"]]},
+{h:"4. परीक्षा के महत्वपूर्ण प्रश्न",subs:[["‘प्र’ उपसर्ग वाला शब्द?","प्रबल, प्रताप, प्रकाश"],["‘अपनापन’ में प्रत्यय?","पन (तद्धित प्रत्यय)"],["‘बेईमान’ में उपसर्ग?","बे (उर्दू-फ़ारसी)"]]}
+]);
 S[0].t[0]=S[0].t[8];S[0].t.length=8;
 let lang="hi";try{lang=localStorage.getItem("stet-lang")||"hi"}catch(e){}
 const T=(h,e)=>lang==="en"?e:h;
 const SN=["Hindi","English","Maths","Science","EVS & Social Studies","Child Psychology","Teaching Skills","General Knowledge","Reasoning, ICT & Life Skills","Sanskrit"];
-const nm=i=>lang==="en"?SN[i]:S[i].n;
+const HU=[340,210,30,150,100,270,190,50,300,15],IC=["📖","🔤","➕","🔬","🌍","🧠","🎓","💡","🧩","🕉️"];
+const nm=i=>IC[i]+" "+(lang==="en"?SN[i]:S[i].n);
+function burst(el){if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;const r=el.getBoundingClientRect();for(let i=0;i<20;i++){const s=document.createElement("i");s.className="cf";s.style.cssText="left:"+(r.left+8)+"px;top:"+(r.top+8)+"px;background:hsl("+Math.floor(Math.random()*360)+" 85% 58%);--dx:"+Math.round((Math.random()-.5)*180)+"px;--dy:"+Math.round(-30-Math.random()*120)+"px";document.body.appendChild(s);setTimeout(()=>s.remove(),950)}}
 const TT={"0-0":"Sandhi (Joining of Sounds)","0-1":"Samas (Compounds)","0-2":"Alankar (Figures of Speech)","0-3":"Ras & Sthayi Bhav","0-4":"Karak & Vibhakti (Cases)","0-5":"Vocabulary & Sentence Correction","0-6":"Gender & Number Rules","0-7":"Prefixes & Suffixes","0-8":"Chapter: Sandhi","0-9":"Swar Sandhi: 5 Types with Examples","0-10":"Vyanjan & Visarg Sandhi","0-11":"Sandhi: Important Exam Questions",
 "2-0":"Number System","2-1":"Percentage, Profit & Loss","2-2":"Interest (SI & CI)","2-3":"Average","2-4":"Speed, Distance & Time","2-5":"Mensuration","2-6":"Ratio & Partnership","2-7":"Time & Work",
 "3-0":"Physics","3-1":"Chemistry","3-2":"Biology","3-3":"Vitamins & Diseases","3-4":"Human Body Systems","3-5":"Matter & Changes",
