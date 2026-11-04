@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>सुपर TET नोट्स</title>
+<title>रितु के सुपर TET नोट्स ❤</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
 <style>
@@ -34,6 +34,13 @@ summary label{font-weight:400;font-size:14px;color:var(--muted);white-space:nowr
 details ul{margin:0 0 12px;padding-left:20px}
 details li{margin:4px 0}
 .empty{color:var(--muted);padding:20px 0}
+.ded{text-align:center;border:1.5px solid var(--margin);border-radius:14px;padding:16px 16px 14px;margin:6px 0 16px;background:color-mix(in srgb,var(--margin) 8%,var(--card))}
+.hrt{font-size:32px;line-height:1.2;color:var(--margin);animation:bt 1.6s ease-in-out infinite}
+@keyframes bt{50%{transform:scale(1.15)}}
+@media (prefers-reduced-motion:reduce){.hrt{animation:none}}
+.to{font:400 clamp(22px,5vw,30px)/1.3 "Tiro Devanagari Hindi",serif;color:var(--ink);margin:4px 0}
+.ms{margin:6px 0}.sg{color:var(--muted);font-size:15px;margin:0}
+.cheer{color:var(--margin);font-weight:600;margin:0 0 12px}
 .qq{margin:18px 0}.qq p{margin:0 0 6px;font-weight:600}
 .op{display:block;width:100%;text-align:left;font:inherit;padding:8px 12px;margin:5px 0;border:1.5px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer}
 .op.sel{border-color:var(--ink);background:var(--chip)}
@@ -47,10 +54,11 @@ details li{margin:4px 0}
 </head>
 <body>
 <div class="wrap">
+<section class="ded" aria-label="Dedication"><div class="hrt" aria-hidden="true">❤</div><p class="to" id="to"></p><p class="ms" id="ms"></p><p class="sg" id="sg"></p></section>
 <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h1 id="h1">सुपर TET नोट्स</h1><button class="go" id="lg" style="padding:6px 14px;font-size:14px">English</button></div>
 <p class="sub" id="sb">UP Super TET (प्राइमरी, कक्षा 1–5) के लिए विषयवार संक्षिप्त नोट्स। टॉपिक पढ़ने के बाद “पढ़ लिया” पर टिक करें।</p>
 <div class="bar"><i id="pb"></i></div>
-<div id="pt"></div>
+<div id="pt"></div><div id="ch" class="cheer"></div>
 <input type="search" id="q" placeholder="टॉपिक खोजें, जैसे: संधि, पियाजे, RTE" aria-label="खोजें">
 <nav id="nav" aria-label="विषय"></nav>
 <main id="list"></main>
@@ -164,7 +172,7 @@ try{done=JSON.parse(localStorage.getItem("stet-done")||"{}")}catch(e){}
 const $=id=>document.getElementById(id);
 function save(){try{localStorage.setItem("stet-done",JSON.stringify(done))}catch(e){}}
 function prog(){let a=0,d=0;S.forEach((s,i)=>s.t.forEach((t,j)=>{a++;if(done[i+"-"+j])d++}));
-$("pb").style.width=(a?d/a*100:0)+"%";$("pt").textContent=d+" / "+a+T(" टॉपिक पढ़े गए"," topics completed")}
+$("pb").style.width=(a?d/a*100:0)+"%";$("pt").textContent=d+" / "+a+T(" टॉपिक पढ़े गए"," topics completed");{const r=a?d/a:0;$("ch").textContent=d===0?T("आज पहला टॉपिक पढ़कर शुरुआत करो, रितु!","Start today with your first topic, Ritu!"):r<.25?T("बहुत बढ़िया शुरुआत, रितु! लगी रहो।","A great start, Ritu! Keep going."):r<.5?T("शाबाश रितु! तुम आगे बढ़ रही हो।","Well done, Ritu! You are making real progress."):r<1?T("कमाल! मंज़िल अब बहुत पास है।","Amazing! The finish line is very close."):T("तुमने सब पढ़ लिया, रितु! अब टेस्ट देकर जीत लो।","You have read everything, Ritu! Now take the test and win it.")}}
 function nav(){const n=$("nav");n.innerHTML="";
 [[T("सभी","All"),-1],...S.map((s,i)=>[nm(i),i]),[T("अभ्यास टेस्ट","Practice Test"),-2],[T("पुराने पेपर","Past Papers"),-3]].forEach(([l,i])=>{const b=document.createElement("button");b.textContent=l;
 b.setAttribute("aria-pressed",cur===i);b.onclick=()=>{cur=i;nav();render()};n.appendChild(b)})}
@@ -322,7 +330,10 @@ const TB={
 };
 const trn=(i,j,t)=>lang!=="en"?t:[TT[i+"-"+j]||t[0],TB[i+"-"+j]||(i===1?t[1]:["(English version coming soon. Hindi notes shown below.)",...t[1]])];
 function applyLang(){document.documentElement.lang=lang==="en"?"en":"hi";
-$("h1").textContent=T("सुपर TET नोट्स","Super TET Notes");
+$("h1").textContent=T("रितु के सुपर TET नोट्स","Ritu’s Super TET Notes");document.title=T("रितु के सुपर TET नोट्स ❤","Ritu’s Super TET Notes ❤");
+$("to").textContent=T("सिर्फ़ तुम्हारे लिए, रितु","Only for you, Ritu");
+$("ms").textContent=T("तुम्हारी मेहनत, लगन और सपनों के नाम। यहाँ का हर टॉपिक और हर सवाल तुम्हारे लिए बनाया गया है। मुझे पूरा भरोसा है कि तुम ये परीक्षा ज़रूर पास करोगी। हर दिन थोड़ा-थोड़ा पढ़ो, मैं हमेशा तुम्हारे साथ हूँ।","For your hard work, dedication and dreams. Every topic and every question here is made for you. I have complete faith that you will clear this exam. Study a little every day, and I am always by your side.");
+$("sg").textContent=T("— ढेर सारे प्यार के साथ ❤","— With all my love ❤");
 $("sb").textContent=T("UP Super TET (प्राइमरी, कक्षा 1–5) के लिए विषयवार संक्षिप्त नोट्स। टॉपिक पढ़ने के बाद “पढ़ लिया” पर टिक करें।","Subject-wise concise notes for UP Super TET (Primary, Classes 1–5). Tick “Mark as read” after finishing a topic.");
 $("nt").textContent=T("ये नोट्स रिवीजन के लिए संक्षिप्त हैं। पूरा पाठ्यक्रम upbeb.org पर दी गई आधिकारिक PDF से मिलाकर देखें। करंट अफेयर्स रोज़ अख़बार या मासिक पत्रिका से अलग से पढ़ें।","These are short revision notes. Match them with the official syllabus PDF on upbeb.org. Read current affairs separately from a daily newspaper or monthly magazine.");
 $("q").placeholder=T("टॉपिक खोजें, जैसे: संधि, पियाजे, RTE","Search topics, e.g. percentage, Piaget, RTE");
