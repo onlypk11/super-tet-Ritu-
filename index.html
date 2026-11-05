@@ -87,6 +87,18 @@ details.done summary>span::after{content:" ✅"}
 .msg>div{overflow:hidden}
 .ded.open .msg{grid-template-rows:1fr;opacity:1}
 @media (prefers-reduced-motion:reduce){.msg{transition:none}}
+.tc{--hc:hsl(var(--h,230) 70% var(--l));display:flex;gap:10px;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--hc) 5%,var(--card));border:1px solid var(--line);border-left:4px solid var(--hc);border-radius:12px;margin:10px 0;padding:12px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:transform .15s}
+.tc:hover{transform:translateY(-2px)}.tc.done{border-left-color:var(--done)}
+.tl{flex:1;font-weight:600;color:var(--hc);text-decoration:none}.tl::after{content:" ›"}.tc.done .tl::after{content:" ✅"}
+.tc label{font-size:14px;color:var(--muted);white-space:nowrap;display:flex;gap:6px;align-items:center}
+.pg .ded,.pg #sb,.pg .bar,.pg #pt,.pg #ch,.pg #q,.pg nav,.pg .note{display:none}
+.tp{--hc:hsl(var(--h,230) 70% var(--l))}
+.back{display:inline-block;margin:10px 0 4px;font-weight:600;color:var(--ink);text-decoration:none}
+.ptt{font:400 clamp(26px,5vw,34px)/1.3 "Tiro Devanagari Hindi",serif;color:var(--hc);margin:4px 0 14px}
+.tp ul{padding-left:22px}.tp li{margin:8px 0;font-size:18px;line-height:1.9}.tp .sub p{font-size:18px;line-height:1.9}
+.pn{display:flex;gap:10px;margin-top:14px}.pn a{flex:1;color:var(--ink);font-weight:600;text-decoration:none;border:1.5px solid var(--ink);border-radius:8px;padding:8px 12px;font-size:15px;line-height:1.4}.pn a:last-child:not(:first-child){text-align:right}
+.mk{display:block;margin:26px auto 0}
+@media (prefers-reduced-motion:reduce){.tc{transition:none}.tc:hover{transform:none}}
 </style>
 </head>
 <body>
@@ -204,7 +216,7 @@ S.push({n:"संस्कृत",t:[
 ["धातु रूप और लकार",["पठ् (लट्, वर्तमान): प्रथम पुरुष पठति, पठतः, पठन्ति; मध्यम पठसि, पठथः, पठथ; उत्तम पठामि, पठावः, पठामः।","लकार: लट् (वर्तमान), लङ् (भूत), लृट् (भविष्य), लोट् (आज्ञा), विधिलिङ् (चाहिए/संभावना)।","प्रमुख धातुएँ: भू–भवति, गम्–गच्छति, पा–पिबति, दृश्–पश्यति, कृ–करोति, खाद्–खादति।"]],
 ["अव्यय और वाक्य रचना",["अव्यय (रूप नहीं बदलते): च (और), अपि (भी), एव (ही), तथा, अत्र (यहाँ), तत्र (वहाँ), कदा (कब), अद्य (आज), श्वः (आने वाला कल), ह्यः (बीता कल)।","वाक्य में कर्ता और क्रिया का पुरुष-वचन समान होता है: बालकः पुस्तकं पठति (बालक पुस्तक पढ़ता है); छात्राः विद्यालयं गच्छन्ति।","अनुवाद करते समय पहले कर्ता, फिर कर्म, अंत में क्रिया पहचानें।"]]
 ]});
-let cur=-1,done={};
+let cur=-1,done={},back=null;
 try{done=JSON.parse(localStorage.getItem("stet-done")||"{}")}catch(e){}
 const $=id=>document.getElementById(id);
 function save(){try{localStorage.setItem("stet-done",JSON.stringify(done))}catch(e){}}
@@ -213,19 +225,17 @@ $("pb").style.width=(a?d/a*100:0)+"%";$("pt").textContent=d+" / "+a+T(" टॉ�
 function nav(){const n=$("nav");n.innerHTML="";
 [[T("सभी","All"),-1],...S.map((s,i)=>[nm(i),i]),[T("अभ्यास टेस्ट","Practice Test"),-2],[T("पुराने पेपर","Past Papers"),-3],[T("सिलेबस","Syllabus"),-4]].forEach(([l,i])=>{const b=document.createElement("button");b.textContent=l;
 b.setAttribute("aria-pressed",cur===i);b.style.setProperty("--h",i>=0?HU[i]:({"-1":250,"-2":340,"-3":30,"-4":160})[i]);b.onclick=()=>{cur=i;nav();render()};n.appendChild(b)})}
-function render(){if(cur===-2){quiz();return}if(cur===-3){pyq();return}if(cur===-4){syl();return}const q=$("q").value.trim().toLowerCase(),L=$("list");L.innerHTML="";let any=false;
+function render(){const hm=/^#t(\d+)-(\d+)$/.exec(location.hash);if(hm&&S[hm[1]]&&S[hm[1]].t[hm[2]]){page(+hm[1],+hm[2]);return}if(cur===-2){quiz();return}if(cur===-3){pyq();return}if(cur===-4){syl();return}const q=$("q").value.trim().toLowerCase(),L=$("list");L.innerHTML="";let any=false;
 S.forEach((s,i)=>{if(cur!==-1&&cur!==i)return;
 const items=s.t.map((t,j)=>[trn(i,j,t),j]).filter(([t])=>!q||(t[0]+t[1].join(" ")).toLowerCase().includes(q));
 if(!items.length)return;any=true;
 const h=document.createElement("h2");h.textContent=nm(i);h.style.setProperty("--h",HU[i]);L.appendChild(h);
-items.forEach(([t,j])=>{const k=i+"-"+j,d=document.createElement("details");d.style.setProperty("--h",HU[i]);if(done[k])d.className="done";if(q)d.open=true;
-const sm=document.createElement("summary"),sp=document.createElement("span");sp.textContent=t[0];
-const lb=document.createElement("label"),cb=document.createElement("input");cb.type="checkbox";cb.checked=!!done[k];
-cb.onclick=e=>e.stopPropagation();
-cb.onchange=()=>{if(cb.checked)done[k]=1;else delete done[k];if(cb.checked)burst(cb);d.className=cb.checked?"done":"";save();prog()};
-lb.append(cb,T("पढ़ लिया","Mark as read"));lb.onclick=e=>e.stopPropagation();sm.append(sp,lb);d.appendChild(sm);
-const ul=document.createElement("ul");t[1].forEach(x=>{const li=document.createElement("li");li.textContent=x;ul.appendChild(li)});
-d.appendChild(t[2]?secs(t[2]):ul);L.appendChild(d)})});
+items.forEach(([t,j])=>{const k=i+"-"+j,d=document.createElement("div");d.className="tc"+(done[k]?" done":"");d.style.setProperty("--h",HU[i]);
+const a=document.createElement("a");a.className="tl";a.href="#t"+k;a.textContent=t[0];
+const lb=document.createElement("label"),cb=document.createElement("input");cb.type="checkbox";cb.checked=!!done[k];cb.onclick=e=>e.stopPropagation();
+cb.onchange=()=>{if(cb.checked)done[k]=1;else delete done[k];if(cb.checked)burst(cb);d.className="tc"+(cb.checked?" done":"");save();prog()};
+lb.append(cb,T("पढ़ लिया","Mark as read"));lb.onclick=e=>e.stopPropagation();
+d.onclick=()=>{back=scrollY;location.hash="t"+k};d.append(a,lb);L.appendChild(d)})});
 if(!any)L.innerHTML='<p class="empty">कोई टॉपिक नहीं मिला। दूसरा शब्द खोजें या “सभी” चुनें।</p>';prog()}
 const Q=[
 ["नीलकंठ में कौन-सा समास है?",["कर्मधारय","तत्पुरुष","बहुव्रीहि","द्विगु"],2],
@@ -765,6 +775,17 @@ const TB={
 "6-4":["Discipline comes from involving children in making rules, not from fear","Questioning: simple to complex, give everyone a chance, respond positively","Concrete objects and TLM work best for young children"]
 };
 const trn=(i,j,t)=>lang!=="en"?t:[TT[i+"-"+j]||t[0],TB[i+"-"+j]||(i===1?t[1]:["(English version coming soon. Hindi notes shown below.)",...t[1]]),t[2]];
+function page(i,j){const L=$("list");L.innerHTML="";const t=trn(i,j,S[i].t[j]),k=i+"-"+j,w=document.createElement("div");w.className="tp";w.style.setProperty("--h",HU[i]);document.title=t[0];
+const bk=()=>{const a=document.createElement("a");a.className="back";a.href="#";a.textContent="← "+T("सभी टॉपिक","All topics");return a};
+const h=document.createElement("h2");h.textContent=nm(i);const tt=document.createElement("div");tt.className="ptt";tt.textContent=t[0];
+w.append(bk(),h,tt);
+if(t[2])w.appendChild(secs(t[2]));else{const ul=document.createElement("ul");t[1].forEach(x=>{const li=document.createElement("li");li.textContent=x;ul.appendChild(li)});w.appendChild(ul)}
+const m=document.createElement("button");m.className="go mk";const lab=()=>{m.textContent=done[k]?T("✅ पढ़ लिया (हटाएँ)","✅ Read (undo)"):T("✔ पढ़ लिया पर टिक करें","✔ Mark as read")};lab();
+m.onclick=()=>{if(done[k])delete done[k];else{done[k]=1;burst(m)}save();lab()};w.appendChild(m);
+const pn=document.createElement("div");pn.className="pn";
+[[j-1,"← "],[j+1,""]].forEach(([n,pre],x)=>{if(!S[i].t[n])return;const a=document.createElement("a");a.href="#t"+i+"-"+n;a.textContent=x?trn(i,n,S[i].t[n])[0]+" →":pre+trn(i,n,S[i].t[n])[0];pn.appendChild(a)});
+w.append(pn,bk());L.appendChild(w)}
+function route(){const m=/^#t(\d+)-(\d+)$/.exec(location.hash),ok=m&&S[m[1]]&&S[m[1]].t[m[2]];document.body.classList.toggle("pg",!!ok);if(!ok)document.title=T("रितु के सुपर TET नोट्स ❤","Ritu’s Super TET Notes ❤");render();if(ok)scrollTo(0,0);else if(back!=null){scrollTo(0,back);back=null}}
 function applyLang(){document.documentElement.lang=lang==="en"?"en":"hi";
 $("h1").textContent=T("रितु के सुपर TET नोट्स","Ritu’s Super TET Notes");document.title=T("रितु के सुपर TET नोट्स ❤","Ritu’s Super TET Notes ❤");
 $("to").textContent=T("Dear Ritu,","Dear Ritu,");
@@ -778,7 +799,7 @@ $("lg").onclick=()=>{lang=lang==="en"?"hi":"en";try{localStorage.setItem("stet-l
 $("q").oninput=()=>{if(cur<=-2){cur=-1;nav()}render()};
 const ded=$("ded");const tg=()=>{const o=ded.classList.toggle("open");ded.setAttribute("aria-expanded",o);if(o)burst(ded.querySelector(".hrt"))};
 ded.onclick=tg;ded.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tg()}};
-applyLang();
+window.onhashchange=route;applyLang();route();
 </script>
 </body>
 </html>
