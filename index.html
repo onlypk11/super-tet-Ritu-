@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#e0457b"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="सुपर TET">
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>रितु के सुपर TET नोट्स ❤</title>
@@ -34,7 +36,6 @@ summary label{font-weight:400;font-size:14px;color:var(--muted);white-space:nowr
 details ul{margin:0 0 12px;padding-left:20px}
 details li{margin:4px 0}
 .empty{color:var(--muted);padding:20px 0}
-.ded{text-align:center;border:1.5px solid var(--margin);border-radius:14px;padding:16px 16px 14px;margin:6px 0 16px;background:color-mix(in srgb,var(--margin) 8%,var(--card))}
 .hrt{font-size:32px;line-height:1.2;color:var(--margin);animation:bt 1.6s ease-in-out infinite}
 @keyframes bt{50%{transform:scale(1.15)}}
 @media (prefers-reduced-motion:reduce){.hrt{animation:none}}
@@ -59,7 +60,6 @@ details li{margin:4px 0}
 h1{background:linear-gradient(90deg,#e91e63,#ff9800,#2196f3,#8e24aa);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 .bar{height:12px;border-radius:8px}
 .bar i{background:linear-gradient(90deg,#ff5f6d,#ffc371,#47d18c,#4facfe)}
-.ded{background:linear-gradient(135deg,color-mix(in srgb,#ff6fa5 18%,var(--card)),color-mix(in srgb,#ffb74d 18%,var(--card)));box-shadow:0 6px 18px color-mix(in srgb,var(--margin) 22%,transparent)}
 .cheer{background:linear-gradient(90deg,#ff6fa5,#ff9800);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;font-size:18px}
 nav button{--hc:hsl(var(--h,230) 70% var(--l));border-color:var(--hc);background:color-mix(in srgb,var(--hc) 13%,var(--paper));color:var(--hc);transition:transform .15s}
 nav button:hover{transform:translateY(-2px)}
@@ -80,18 +80,15 @@ details.done summary>span::after{content:" ✅"}
 .cf{position:fixed;width:8px;height:8px;border-radius:2px;z-index:99;pointer-events:none;animation:cf .9s ease-out forwards}
 @keyframes cf{to{transform:translate(var(--dx),var(--dy)) rotate(360deg);opacity:0}}
 @media (prefers-reduced-motion:reduce){details,nav button,.op{transition:none}details:hover,nav button:hover,.op:hover{transform:none}}
-.ded{cursor:pointer}
 .hint{color:var(--muted);font-size:14px;margin:2px 0 0}
-.ded.open .hint{display:none}
 .msg{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .45s ease,opacity .45s ease}
 .msg>div{overflow:hidden}
-.ded.open .msg{grid-template-rows:1fr;opacity:1}
 @media (prefers-reduced-motion:reduce){.msg{transition:none}}
 .tc{--hc:hsl(var(--h,230) 70% var(--l));display:flex;gap:10px;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--hc) 5%,var(--card));border:1px solid var(--line);border-left:4px solid var(--hc);border-radius:12px;margin:10px 0;padding:12px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:transform .15s}
 .tc:hover{transform:translateY(-2px)}.tc.done{border-left-color:var(--done)}
 .tl{flex:1;font-weight:600;color:var(--hc);text-decoration:none}.tl::after{content:" ›"}.tc.done .tl::after{content:" ✅"}
 .tc label{font-size:14px;color:var(--muted);white-space:nowrap;display:flex;gap:6px;align-items:center}
-.pg .ded,.pg #sb,.pg .bar,.pg #pt,.pg #ch,.pg #q,.pg nav,.pg .note{display:none}
+.pg #sb,.pg .bar,.pg #pt,.pg #ch,.pg #q,.pg nav,.pg .note{display:none}
 .tp{--hc:hsl(var(--h,230) 70% var(--l))}
 .back{display:inline-block;margin:10px 0 4px;font-weight:600;color:var(--ink);text-decoration:none}
 .ptt{font:400 clamp(26px,5vw,34px)/1.3 "Tiro Devanagari Hindi",serif;color:var(--hc);margin:4px 0 14px}
@@ -116,7 +113,6 @@ details.done summary>span::after{content:" ✅"}
 </head>
 <body>
 <div class="wrap">
-<section class="ded" id="ded" role="button" tabindex="0" aria-expanded="false" aria-label="Dedication"><div class="hrt" aria-hidden="true">❤</div><p class="to" id="to"></p><p class="hint" id="hint"></p><div class="msg"><div><p class="ms" id="ms"></p><p class="sg" id="sg"></p></div></div></section>
 <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><button class="mb" id="mb" aria-label="मेनू" aria-expanded="false">⋮</button><h1 id="h1" style="flex:1">सुपर TET नोट्स</h1><button class="go" id="lg" style="padding:6px 14px;font-size:14px">English</button></div>
 <p class="sub" id="sb">UP Super TET (प्राइमरी, कक्षा 1–5) के लिए विषयवार संक्षिप्त नोट्स। टॉपिक पढ़ने के बाद “पढ़ लिया” पर टिक करें।</p>
 <div class="bar"><i id="pb"></i></div>
@@ -942,18 +938,14 @@ w.append(pn,bk());L.appendChild(w)}
 function route(){const m=/^#t(\d+)-(\d+)$/.exec(location.hash),ok=m&&S[m[1]]&&S[m[1]].t[m[2]];document.body.classList.toggle("pg",!!ok);if(!ok)document.title=T("रितु के सुपर TET नोट्स ❤","Ritu’s Super TET Notes ❤");render();if(ok)scrollTo(0,0);else if(back!=null){scrollTo(0,back);back=null}}
 function applyLang(){document.documentElement.lang=lang==="en"?"en":"hi";
 $("h1").textContent=T("रितु के सुपर TET नोट्स","Ritu’s Super TET Notes");document.title=T("रितु के सुपर TET नोट्स ❤","Ritu’s Super TET Notes ❤");
-$("to").textContent=T("Dear Ritu,","Dear Ritu,");
-$("ms").textContent=T("तुम्हारी मेहनत, लगन और सपनों के नाम। यहाँ का हर टॉपिक और हर सवाल तुम्हारे लिए बनाया गया है। मुझे पूरा भरोसा है कि तुम ये परीक्षा ज़रूर पास करोगी। हर दिन थोड़ा-थोड़ा पढ़ो, मैं हमेशा तुम्हारे साथ हूँ।","For your hard work, dedication and dreams. Every topic and every question here is made for you. I have complete faith that you will clear this exam. Study a little every day, and I am always by your side.");
-$("hint").textContent=T("👆 यहाँ क्लिक करो, तुम्हारे लिए कुछ है…","👆 Tap here, there’s something for you…");$("sg").textContent=T("— ढेर सारे प्यार के साथ ❤","— With all my love ❤");
 $("sb").textContent=T("UP Super TET (प्राइमरी, कक्षा 1–5) के लिए विषयवार संक्षिप्त नोट्स। टॉपिक पढ़ने के बाद “पढ़ लिया” पर टिक करें।","Subject-wise concise notes for UP Super TET (Primary, Classes 1–5). Tick “Mark as read” after finishing a topic.");
 $("nt").textContent=T("ये नोट्स रिवीजन के लिए संक्षिप्त हैं। पूरा पाठ्यक्रम upbeb.org पर दी गई आधिकारिक PDF से मिलाकर देखें। करंट अफेयर्स रोज़ अख़बार या मासिक पत्रिका से अलग से पढ़ें।","These are short revision notes. Match them with the official syllabus PDF on upbeb.org. Read current affairs separately from a daily newspaper or monthly magazine.");
 $("q").placeholder=T("टॉपिक खोजें, जैसे: संधि, पियाजे, RTE","Search topics, e.g. percentage, Piaget, RTE");
 $("lg").textContent=T("English","हिंदी");nav();render()}
 $("lg").onclick=()=>{lang=lang==="en"?"hi":"en";try{localStorage.setItem("stet-lang",lang)}catch(e){}applyLang()};
 $("q").oninput=()=>{if(cur<=-2){cur=-1;nav()}render()};
-const ded=$("ded");const tg=()=>{const o=ded.classList.toggle("open");ded.setAttribute("aria-expanded",o);if(o)burst(ded.querySelector(".hrt"))};
-ded.onclick=tg;ded.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tg()}};
 window.onhashchange=route;applyLang();route();
+if("serviceWorker" in navigator&&/^https?:/.test(location.protocol))addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 </script>
 </body>
 </html>
