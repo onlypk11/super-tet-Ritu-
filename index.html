@@ -99,20 +99,34 @@ details.done summary>span::after{content:" ✅"}
 .pn{display:flex;gap:10px;margin-top:14px}.pn a{flex:1;color:var(--ink);font-weight:600;text-decoration:none;border:1.5px solid var(--ink);border-radius:8px;padding:8px 12px;font-size:15px;line-height:1.4}.pn a:last-child:not(:first-child){text-align:right}
 .mk{display:block;margin:26px auto 0}
 @media (prefers-reduced-motion:reduce){.tc{transition:none}.tc:hover{transform:none}}
+.chip{border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;margin:4px 4px 4px 0;font:inherit;font-size:14px;cursor:pointer}.chip[aria-pressed=true]{background:var(--ink);color:var(--card)}
+.cah{font-size:18px;margin:20px 0 6px}.ci{margin:8px 0;padding:10px 12px;border-left:4px solid hsl(20 80% 52%);background:color-mix(in srgb,hsl(20 80% 52%) 6%,var(--card));border-radius:10px;line-height:1.85;font-size:16.5px}
+.k{background:rgba(255,196,0,.32);border-radius:5px;padding:0 5px;font-weight:700;cursor:pointer}.hid .k:not(.on){color:transparent;background:rgba(127,127,127,.35);user-select:none}
+.mb{background:var(--card);border:1.5px solid var(--line);border-radius:10px;font-size:24px;line-height:1;width:42px;height:42px;cursor:pointer;color:var(--ink);flex:none}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}.ov.on{opacity:1;pointer-events:auto}
+.dr{position:fixed;top:0;bottom:0;left:0;width:min(82vw,300px);background:var(--card);border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .22s;z-index:50;overflow:auto;padding:14px 10px;box-shadow:4px 0 20px rgba(0,0,0,.25)}.dr.on{transform:none}
+.dr .it{display:block;width:100%;text-align:left;background:none;border:0;border-left:4px solid transparent;border-radius:10px;padding:10px 12px;font:inherit;color:var(--ink);cursor:pointer}.dr .it[aria-pressed=true]{background:color-mix(in srgb,var(--ink) 10%,transparent);border-left-color:hsl(var(--h) 70% 50%);font-weight:700}
+.dr h4{margin:14px 12px 4px;font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.dash #sb,.dash .bar,.dash #pt,.dash #ch,.dash .note{display:none}
+.dg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}.sc{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--card)}.sc b{display:block;font-size:22px;margin-bottom:2px}.sc span{font-size:13px;color:var(--muted)}
+.st{cursor:pointer;border-left:4px solid hsl(var(--h) 70% 50%)}.st b{font-size:16px}.pb2{height:6px;background:var(--line);border-radius:6px;margin-top:8px}.pb2 i{display:block;height:100%;border-radius:6px;background:hsl(var(--h) 70% 50%)}
+.dh2{font-size:19px;margin:22px 0 8px}
+@media (prefers-reduced-motion:reduce){.dr,.ov{transition:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <section class="ded" id="ded" role="button" tabindex="0" aria-expanded="false" aria-label="Dedication"><div class="hrt" aria-hidden="true">❤</div><p class="to" id="to"></p><p class="hint" id="hint"></p><div class="msg"><div><p class="ms" id="ms"></p><p class="sg" id="sg"></p></div></div></section>
-<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h1 id="h1">सुपर TET नोट्स</h1><button class="go" id="lg" style="padding:6px 14px;font-size:14px">English</button></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><button class="mb" id="mb" aria-label="मेनू" aria-expanded="false">⋮</button><h1 id="h1" style="flex:1">सुपर TET नोट्स</h1><button class="go" id="lg" style="padding:6px 14px;font-size:14px">English</button></div>
 <p class="sub" id="sb">UP Super TET (प्राइमरी, कक्षा 1–5) के लिए विषयवार संक्षिप्त नोट्स। टॉपिक पढ़ने के बाद “पढ़ लिया” पर टिक करें।</p>
 <div class="bar"><i id="pb"></i></div>
 <div id="pt"></div><div id="ch" class="cheer"></div>
 <input type="search" id="q" placeholder="टॉपिक खोजें, जैसे: संधि, पियाजे, RTE" aria-label="खोजें">
-<nav id="nav" aria-label="विषय"></nav>
+<nav id="nav" hidden></nav>
 <main id="list"></main>
 <p class="note" id="nt">ये नोट्स रिवीजन के लिए संक्षिप्त हैं। पूरा पाठ्यक्रम upbeb.org पर दी गई आधिकारिक PDF से मिलाकर देखें। करंट अफेयर्स रोज़ अख़बार या मासिक पत्रिका से अलग से पढ़ें।</p>
 </div>
+<div class="ov" id="ov"></div><aside class="dr" id="dr" aria-label="मेनू"><div id="dl"></div></aside>
 <script>
 const S=[
 {n:"हिंदी",t:[
@@ -216,16 +230,17 @@ S.push({n:"संस्कृत",t:[
 ["धातु रूप और लकार",["पठ् (लट्, वर्तमान): प्रथम पुरुष पठति, पठतः, पठन्ति; मध्यम पठसि, पठथः, पठथ; उत्तम पठामि, पठावः, पठामः।","लकार: लट् (वर्तमान), लङ् (भूत), लृट् (भविष्य), लोट् (आज्ञा), विधिलिङ् (चाहिए/संभावना)।","प्रमुख धातुएँ: भू–भवति, गम्–गच्छति, पा–पिबति, दृश्–पश्यति, कृ–करोति, खाद्–खादति।"]],
 ["अव्यय और वाक्य रचना",["अव्यय (रूप नहीं बदलते): च (और), अपि (भी), एव (ही), तथा, अत्र (यहाँ), तत्र (वहाँ), कदा (कब), अद्य (आज), श्वः (आने वाला कल), ह्यः (बीता कल)।","वाक्य में कर्ता और क्रिया का पुरुष-वचन समान होता है: बालकः पुस्तकं पठति (बालक पुस्तक पढ़ता है); छात्राः विद्यालयं गच्छन्ति।","अनुवाद करते समय पहले कर्ता, फिर कर्म, अंत में क्रिया पहचानें।"]]
 ]});
-let cur=-1,done={},back=null;
+let cur=-6,done={},back=null;
 try{done=JSON.parse(localStorage.getItem("stet-done")||"{}")}catch(e){}
 const $=id=>document.getElementById(id);
 function save(){try{localStorage.setItem("stet-done",JSON.stringify(done))}catch(e){}}
 function prog(){let a=0,d=0;S.forEach((s,i)=>s.t.forEach((t,j)=>{a++;if(done[i+"-"+j])d++}));
 $("pb").style.width=(a?d/a*100:0)+"%";$("pt").textContent=d+" / "+a+T(" टॉपिक पढ़े गए"," topics completed");{const r=a?d/a:0;$("ch").textContent=d===0?T("आज पहला टॉपिक पढ़कर शुरुआत करो, रितु!","Start today with your first topic, Ritu!"):r<.25?T("बहुत बढ़िया शुरुआत, रितु! लगी रहो।","A great start, Ritu! Keep going."):r<.5?T("शाबाश रितु! तुम आगे बढ़ रही हो।","Well done, Ritu! You are making real progress."):r<1?T("कमाल! मंज़िल अब बहुत पास है।","Amazing! The finish line is very close."):T("तुमने सब पढ़ लिया, रितु! अब टेस्ट देकर जीत लो।","You have read everything, Ritu! Now take the test and win it.")}}
-function nav(){const n=$("nav");n.innerHTML="";
-[[T("सभी","All"),-1],...S.map((s,i)=>[nm(i),i]),[T("अभ्यास टेस्ट","Practice Test"),-2],[T("पुराने पेपर","Past Papers"),-3],[T("सिलेबस","Syllabus"),-4]].forEach(([l,i])=>{const b=document.createElement("button");b.textContent=l;
-b.setAttribute("aria-pressed",cur===i);b.style.setProperty("--h",i>=0?HU[i]:({"-1":250,"-2":340,"-3":30,"-4":160})[i]);b.onclick=()=>{cur=i;nav();render()};n.appendChild(b)})}
-function render(){const hm=/^#t(\d+)-(\d+)$/.exec(location.hash);if(hm&&S[hm[1]]&&S[hm[1]].t[hm[2]]){page(+hm[1],+hm[2]);return}if(cur===-2){quiz();return}if(cur===-3){pyq();return}if(cur===-4){syl();return}const q=$("q").value.trim().toLowerCase(),L=$("list");L.innerHTML="";let any=false;
+function nav(){const n=$("dl");n.innerHTML="";const sec=t=>{const h=document.createElement("h4");h.textContent=t;n.appendChild(h)};
+const add=(l,i,h)=>{const b=document.createElement("button");b.className="it";b.textContent=l;b.setAttribute("aria-pressed",cur===i);b.style.setProperty("--h",h);b.onclick=()=>goTo(i);n.appendChild(b)};
+add("🏠 डैशबोर्ड",-6,20);add("📚 "+T("सभी टॉपिक","All topics"),-1,250);sec(T("विषय","SUBJECTS"));S.forEach((x,i)=>add(nm(i),i,HU[i]));sec(T("अभ्यास और जानकारी","PRACTICE & INFO"));
+add("📝 "+T("अभ्यास टेस्ट","Practice Test"),-2,340);add("📄 "+T("पुराने पेपर","Past Papers"),-3,30);add("📋 "+T("सिलेबस","Syllabus"),-4,160);add("📰 "+T("करंट अफेयर्स","Current Affairs"),-5,20)}
+function render(){document.body.classList.toggle("dash",cur===-6);const hm=/^#t(\d+)-(\d+)$/.exec(location.hash);if(hm&&S[hm[1]]&&S[hm[1]].t[hm[2]]){page(+hm[1],+hm[2]);return}if(cur===-2){quiz();return}if(cur===-3){pyq();return}if(cur===-4){syl();return}if(cur===-5){ca();return}if(cur===-6){dash();return}const q=$("q").value.trim().toLowerCase(),L=$("list");L.innerHTML="";let any=false;
 S.forEach((s,i)=>{if(cur!==-1&&cur!==i)return;
 const items=s.t.map((t,j)=>[trn(i,j,t),j]).filter(([t])=>!q||(t[0]+t[1].join(" ")).toLowerCase().includes(q));
 if(!items.length)return;any=true;
@@ -740,6 +755,145 @@ Q.push(
 ["नरौरा परमाणु बिजलीघर उ.प्र. के किस जिले में है?",["बाँदा","सोनभद्र","बुलंदशहर","झाँसी"],2],
 ["उ.प्र. की ODOP योजना का अर्थ है:",["एक जनपद एक उत्पाद","एक राज्य एक योजना","एक विद्यालय एक शिक्षक","एक गाँव एक कुआँ"],0]
 );
+const CATS=[["n","राष्ट्रीय","🇮🇳"],["i","अंतरराष्ट्रीय","🌍"],["s","राज्य","🏛️"],["e","अर्थव्यवस्था","💰"],["t","विज्ञान-तकनीक","🔬"],["d","रक्षा","🛡️"],["a","नियुक्तियाँ","🧑‍💼"],["m","सम्मेलन-समझौते","🤝"],["r","रिपोर्ट-सूचकांक","📊"],["g","खेल","🏅"],["p","पुरस्कार","🏆"],["y","योजनाएँ","📋"],["x","निधन","🕊️"],["v","महत्वपूर्ण दिवस","📅"]];
+/* नया महीना जोड़ने के लिए: CA.push({n:"नाम",p:"अवधि",i:{n:[...],...}}) | {{उत्तर}} = छुपने वाला तथ्य, शुरू में ! = टॉप */
+const CA=[
+{n:"सितंबर 2026 अंक",p:"मुख्यतः 22 जुलाई से 23 अगस्त 2026 की घटनाएँ",i:{
+n:["!सारनाथ (उ.प्र.) भारत का {{45वाँ}} UNESCO विश्व धरोहर स्थल बना; सत्र: {{48वीं}} विश्व धरोहर समिति, बुसान (दक्षिण कोरिया)।",
+"!भारत में बाघों की संख्या बढ़कर {{3,682}}; बाघ अभयारण्य {{58}} (अंतरराष्ट्रीय बाघ दिवस, 29 जुलाई)।",
+"!परीक्षा सुधारों के लिए {{नंदन नीलेकणि}} की अध्यक्षता में टास्क फोर्स बनी; पेपर लीक रोकने के कड़े संशोधन विधेयक को कैबिनेट की मंजूरी।",
+"!{{प्रह्लाद जोशी}} ने केंद्रीय शिक्षा मंत्री का अतिरिक्त प्रभार संभाला।",
+"संसद ने केरल का नाम बदलकर '{{केरलम}}' करने वाला विधेयक पारित किया।",
+"राज्यसभा ने 'वंदे मातरम्' के अपमान को अपराध घोषित करने वाला विधेयक पारित किया।",
+"PM मोदी ने {{'परम प्रज्ञा'}} AI सुपरकंप्यूटिंग सुविधा का उद्घाटन किया।",
+"पंचायती राज मंत्रालय ने ग्राम पंचायतों के डिजिटलीकरण के लिए {{'दानवीर'}} पहल शुरू की (ऐप: मेरी पंचायत)।",
+"जनगणना {{2027}} के प्रश्न अधिसूचित; सुप्रीम कोर्ट ने न्यायिक सेवा के लिए प्रैक्टिस की अनिवार्यता घटाकर {{1 वर्ष}} की।",
+"कैबिनेट ने जम्मू-कश्मीर हाई कोर्ट की स्थायी {{लद्दाख बेंच}} को मंजूरी दी।",
+"ICAR ने {{16}} नई स्वदेशी पशुधन नस्लों का पंजीकरण किया; बच्चों के लिए दो-घटक वाली कफ-कोल्ड दवाओं पर प्रतिबंध।"],
+i:["भारत-चीन: {{नाथू ला}} दर्रे से सीमा व्यापार 1 अगस्त से फिर शुरू।",
+"नाउरू आधिकारिक रूप से '{{नाओएरो}}' गणराज्य बना।",
+"{{मिर्ज़ा फखरुल इस्लाम आलमगीर}} बांग्लादेश के राष्ट्रपति चुने गए।",
+"ओमान और सऊदी अरब ने {{ग्रीन लैंड कॉरिडोर}} का शुभारंभ किया।"],
+s:["!उ.प्र. कैबिनेट ने {{180 दिन}} की मातृत्व छुट्टी दो बार देने को मंजूरी दी।",
+"!उ.प्र. और जापान का {{यामानाशी}} प्रांत: ₹600 करोड़ के MSME फंड की घोषणा।",
+"गुजरात की {{पिथोरा}} चित्रकला को GI टैग मिला।",
+"लद्दाख में {{23}} विरासत स्थल संरक्षित स्मारक घोषित; छत्तीसगढ़ में महिला उद्यमिता के लिए {{'दीप्ति योजना'}}।"],
+e:["भारत ने पेट्रोल निर्यात पर अप्रत्याशित लाभ कर घटाकर {{शून्य}} किया।",
+"एन. चंद्रशेखरन ने {{टाटा संस}} के चेयरमैन पद से इस्तीफ़ा दिया (अक्टूबर अंक में फिर नियुक्त)।",
+"एनकैश ने भारत का पहला {{UPI-एकीकृत मील कार्ड}} लॉन्च किया।"],
+t:["भारत ने {{2035}} तक भारतीय अंतरिक्ष स्टेशन स्थापित करने की योजना बनाई।",
+"चीन ने अंतरिक्ष में उगाई {{चावल}} की पहली फसल काटी; चंद्रमा के दक्षिणी ध्रुव के लिए {{चांग'ई-7}} मिशन निर्धारित।",
+"{{सोफी अडेनोट}} अंतरिक्ष में चहलकदमी करने वाली पहली फ्रांसीसी महिला बनीं।",
+"भारत ने {{जीन-संपादित}} चावल की किस्में लॉन्च कीं।"],
+d:["DRDO ने लंबी दूरी की वायु रक्षा मिसाइल '{{कुशा}}' का सफल परीक्षण किया।",
+"भारतीय वायु सेना और रॉयल मलेशियाई वायु सेना का {{उदारा शक्ति 2026}} अभ्यास शुरू।"],
+a:["{{हरजीत सिंह ग्रेवाल}} राष्ट्रीय अल्पसंख्यक आयोग के अध्यक्ष बने।",
+"{{वर्षा अशोक आगलावे}} GSI की पहली महिला महानिदेशक बनीं।"],
+m:["दूसरा {{भारत ग्रीन हाइड्रोजन}} शिखर सम्मेलन 2026 नई दिल्ली में।",
+"जयपुर में {{16वीं}} BRICS व्यापार मंत्रियों की बैठक संपन्न।",
+"भारत और जापान ने {{समुद्री सुरक्षा}} समझौता किया।"],
+r:["पर्यावरण प्रदर्शन सूचकांक 2026: {{एस्टोनिया}} प्रथम, भारत {{176वें}} स्थान पर।",
+"हेनली पासपोर्ट सूचकांक में भारत {{81वें}} स्थान पर; नीति आयोग ने वित्तीय स्वास्थ्य सूचकांक 2026 जारी किया।",
+"भारत की जीवाश्म-ईंधन-रहित बिजली क्षमता {{300 GW}} के पार।"],
+g:["!{{मीराबाई चानू}} ने लगातार तीसरा राष्ट्रमंडल खेल स्वर्ण जीता; भारत 39 पदकों के साथ {{चौथे}} स्थान पर।",
+"{{वैभव सूर्यवंशी}} T20I में अर्धशतक लगाने वाले सबसे युवा खिलाड़ी बने।",
+"{{अनाहत सिंह}} विश्व जूनियर स्क्वैश चैंपियन बनने वाली पहली भारतीय।",
+"{{अजिंक्य रहाणे}} का अंतरराष्ट्रीय क्रिकेट से संन्यास; FIH हॉकी विश्व कप 2026 बेल्जियम-नीदरलैंड में।"],
+p:["भौतिक विज्ञानी {{दीपक धर}} को 2026 का डिराक मेडल।",
+"राष्ट्रपति ने 2024 और 2025 के {{संगीत नाटक अकादमी}} पुरस्कार प्रदान किए।"],
+y:["!कैबिनेट ने ₹84,084 करोड़ की {{समुद्र मंथन}} योजना को मंजूरी दी।",
+"{{PM-किसान}} योजना चार साल के लिए बढ़ी; ₹23,731 करोड़ की {{गोबरधन}} योजना मंजूर।",
+"₹62,500 करोड़ की {{मोबाइल फोन विनिर्माण}} योजना अधिसूचित।"],
+x:["इतिहासकार {{सुमित सरकार}} का 87 वर्ष की आयु में निधन।",
+"{{सौकार जानकी}} का 94 वर्ष की आयु में निधन।"],
+v:["!{{22 जुलाई}} राष्ट्रीय ध्वज अंगीकरण दिवस; {{24 जुलाई}} आयकर दिवस; {{26 जुलाई}} कारगिल विजय दिवस।",
+"{{28 जुलाई}} विश्व प्रकृति संरक्षण दिवस; {{29 जुलाई}} अंतरराष्ट्रीय बाघ दिवस।",
+"{{6 अगस्त}} हिरोशिमा दिवस; {{7 अगस्त}} राष्ट्रीय हथकरघा दिवस; {{12 अगस्त}} अंतरराष्ट्रीय युवा दिवस।",
+"{{23 अगस्त}} तीसरा राष्ट्रीय अंतरिक्ष दिवस।"]}},
+{n:"अक्टूबर 2026 अंक",p:"मुख्यतः 24 अगस्त से सितंबर 2026 की घटनाएँ",i:{
+n:["!{{सुप्रीम कोर्ट}} ने हिंदी दिवस पर हिंदी में जन सूचना सेवा लॉन्च की।",
+"!भारत ने उन्नत महासागर अनुसंधान पोत '{{ORV सागर मंथन}}' लॉन्च किया।",
+"!{{दक्षिण रेलवे}} ने 100% विद्युतीकरण हासिल किया।",
+"केंद्र ने {{भारतीय मानक समय}} अनिवार्य करने वाले नियम अधिसूचित किए; 11 हवाई अड्डे PPP मॉडल पर लीज़ को मंजूरी।",
+"UIDAI ने आधार {{फेस ऑथेंटिकेशन}} SDK लॉन्च किया; छह महीनों में {{HPV वैक्सीन}} की 80 लाख से अधिक खुराकें दी गईं।",
+"PM मोदी ने पुतिन को {{तिरुक्कुरल}} का रूसी संस्करण भेंट किया।"],
+i:["!{{जॉर्जिया मेलोनी}} इटली की सबसे लंबे समय तक सेवा देने वाली युद्धोत्तर प्रधानमंत्री बनीं।",
+"भारत और फ्रांस ने पेरिस में {{BAPS}} मंदिर का उद्घाटन किया।",
+"{{तुर्किये}} आर्टेमिस समझौते में शामिल होने वाला {{71वाँ}} देश बना।",
+"{{झांग यिमिंग}} एशिया के सबसे अमीर व्यक्ति बने; भारत वैश्विक {{6G}} नेटवर्क पहल में शामिल।"],
+s:["!{{बिहार}} ने छात्रों के लिए 'विद्या साथी' ऐप और {{ओडिशा}} ने 'विशेष शिक्षाबृत्ति' योजना शुरू की।",
+"!{{त्रिपुरा}} ने प्राथमिक विद्यालयों में शून्य ड्रॉपआउट दर हासिल की।",
+"!{{बिहार-झारखंड}} ने {{सोन नदी}} जल-बँटवारा समझौते पर हस्ताक्षर किए।",
+"अमरावती में भारत के पहले {{क्वांटम-AI}} विश्वविद्यालय को मंजूरी।",
+"कर्नाटक कैबिनेट ने {{तुलु}} को दूसरी प्रशासनिक भाषा की मंजूरी दी।",
+"{{कमिक}} लद्दाख का पहला विरासत गाँव बना; संबलपुर (ओडिशा) में 51वाँ {{डॉप्लर मौसम रडार}} शुरू।",
+"मदुरै मीनाक्षी मंदिर का कुंभाभिषेकम {{17 साल}} बाद हुआ।"],
+e:["भारत की पहली तिमाही में वास्तविक GDP वृद्धि {{7.8%}}।",
+"{{UPI}} ने संचालन के 10 वर्ष पूरे किए; {{टिम कुक}} ने एप्पल के CEO पद से इस्तीफ़ा दिया।",
+"कैबिनेट ने EPFO वेतन सीमा बढ़ाकर {{₹25,000}} की; भारत-रूस का 2030 तक {{100 अरब डॉलर}} व्यापार का लक्ष्य।",
+"{{एन. चंद्रशेखरन}} फिर से टाटा संस के चेयरमैन नियुक्त।"],
+t:["ISRO ने {{GSLV-F17}} से {{EOS-05}} लॉन्च किया; CE-20 क्रायोजेनिक इंजन का 220 kN थ्रस्ट पर परीक्षण।",
+"भारत ने अपने पहले निजी निर्मित कॉम्पैक्ट टोकामक '{{प्रज्ञा}}' का अनावरण किया।",
+"{{क्यूडेंगा}} भारत की पहली स्वीकृत डेंगू वैक्सीन बनी।",
+"NASA ने {{नैन्सी ग्रेस रोमन}} स्पेस टेलीस्कोप लॉन्च किया।"],
+d:["भारत ने पहली 100% स्वदेशी {{AK-203}} 'शेर' राइफल का उत्पादन किया।",
+"भारत-अमेरिका युद्ध अभ्यास 2026 {{औली}} (उत्तराखंड) और महाजन में शुरू।",
+"भारत-जापान {{वीर गार्जियन-2026}}; भारत-श्रीलंका नौसैनिक अभ्यास {{SLINEX-26}}।"],
+a:["सेवानिवृत्त एयर मार्शल {{जितेंद्र मिश्रा}} राम मंदिर ट्रस्ट के पहले CEO बने।",
+"{{माइकल क्रेमर}} विश्व बैंक के मुख्य अर्थशास्त्री नियुक्त।",
+"{{विनय कुमार सक्सेना}} ने जम्मू-कश्मीर के उपराज्यपाल का अतिरिक्त कार्यभार संभाला।"],
+m:["!नई दिल्ली में {{18वाँ}} BRICS शिखर सम्मेलन संपन्न; 'नई दिल्ली घोषणा' जारी।",
+"उलानबातर में {{UNCCD COP-17}} संपन्न; पेरिस में पहला अंतरराष्ट्रीय अंतरिक्ष शिखर सम्मेलन।",
+"भारत-अमेरिका {{जेवलिन मिसाइल}} समझौता; भारत-फ्रांस अंतरिक्ष समझौते।"],
+r:["वैश्विक लैंगिक समानता सूचकांक में भारत {{131वें}} स्थान पर।",
+"इंडिया इलेक्ट्रिक मोबिलिटी इंडेक्स 2025 में {{दिल्ली}} शीर्ष पर; {{जवाहरलाल नेहरू पोर्ट}} सबसे तेज़ी से बढ़ता कंटेनर पोर्ट।"],
+g:["{{सात्विक-चिराग}} ने पहली बार चाइना मास्टर्स खिताब जीता।",
+"{{लियोनेल मेसी}} ने अंतरराष्ट्रीय फुटबॉल से संन्यास की घोषणा की।",
+"भारत ने महिला T20 {{एशिया कप}} का 8वाँ खिताब जीता; पुरुष-महिला जूनियर एशिया कप हॉकी खिताब भी भारत के नाम।",
+"{{एलेना रिबाकिना}} ने US ओपन 2026 जीता; भारत को महिला चैंपियंस ट्रॉफी हॉकी की मेजबानी।"],
+p:["PM मोदी को {{उज़्बेकिस्तान}} का सर्वोच्च राजकीय सम्मान।",
+"{{अनंत नाग}} दादासाहेब फाल्के पुरस्कार के लिए चयनित; {{'गोंधळ'}} ऑस्कर 2027 के लिए भारत की आधिकारिक प्रविष्टि।",
+"{{रानी मुखर्जी}} को महाराष्ट्र का राज कपूर पुरस्कार; 72वें राष्ट्रीय फिल्म पुरस्कारों में 92 विजेता।"],
+y:["केंद्र ने '{{मिशन समृद्ध गाँव}}' लॉन्च किया।",
+"भारत की पहली किसानों के लिए {{मृदा कार्बन भुगतान}} योजना।"],
+x:["जापान की 'पोल्का डॉट क्वीन' {{यायोई कुसामा}} का 97 वर्ष की आयु में निधन।",
+"वरिष्ठ कांग्रेस नेता {{ई.एम. सुदर्शन नचियप्पन}} का 78 वर्ष की आयु में निधन।"],
+v:["!{{5 सितंबर}} शिक्षक दिवस; {{8 सितंबर}} अंतरराष्ट्रीय साक्षरता दिवस; {{14 सितंबर}} हिंदी दिवस।",
+"{{28 अगस्त}} विश्व संस्कृत दिवस; {{29 अगस्त}} राष्ट्रीय खेल दिवस; {{15 सितंबर}} अंतरराष्ट्रीय लोकतंत्र दिवस और राष्ट्रीय इंजीनियर दिवस।",
+"{{18 सितंबर}} विश्व बाँस दिवस; संयुक्त राष्ट्र ने {{27 नवंबर}} को बाल विवाह उन्मूलन दिवस घोषित किया।"]}}
+];
+let cam=-1,cac=0,hid=false;
+function ca(){const L=$("list");L.innerHTML="";const m=CA[cam<0?CA.length-1:cam],ci=CA.indexOf(m);
+const h=document.createElement("h2");h.textContent="📰 करंट अफेयर्स";L.appendChild(h);
+const p=document.createElement("p");p.className="sub";p.textContent=m.p+"। ये बिंदु आपकी PDF मैगज़ीन पर आधारित हैं। ⭐ = परीक्षा/TET के लिए ज़्यादा काम के। पीले उत्तर पर टैप करके छुपाएँ-दिखाएँ।";L.appendChild(p);
+const row=(a,cb,sel)=>{const d=document.createElement("div");a.forEach((x,i)=>{const b=document.createElement("button");b.className="chip";b.textContent=x;b.setAttribute("aria-pressed",sel(i));b.onclick=()=>cb(i);d.appendChild(b)});L.appendChild(d)};
+row(CA.map(x=>"📅 "+x.n),i=>{cam=i;ca()},i=>i===ci);
+row(["सभी","⭐ टॉप"].concat(CATS.map(c=>c[2]+" "+c[1])),i=>{cac=i;ca()},i=>i===cac);
+row([hid?"👀 उत्तर दिखाओ":"🙈 अभ्यास मोड: उत्तर छुपाओ"],()=>{hid=!hid;ca()},()=>hid);
+const box=document.createElement("div");if(hid)box.className="hid";let n=0;
+CATS.forEach(([k,nz,ic],x)=>{if(cac>1&&cac-2!==x)return;let it=m.i[k]||[];if(cac===1)it=it.filter(s=>s[0]==="!");if(!it.length)return;
+const h3=document.createElement("h3");h3.className="cah";h3.textContent=ic+" "+nz;box.appendChild(h3);
+it.forEach(s=>{n++;const li=document.createElement("div");li.className="ci";if(s[0]==="!"){s=s.slice(1);li.appendChild(document.createTextNode("⭐ "))}
+s.split(/\{\{(.+?)\}\}/).forEach((t,j)=>{if(j%2){const k2=document.createElement("span");k2.className="k";k2.textContent=t;k2.onclick=()=>k2.classList.toggle("on");li.appendChild(k2)}else li.appendChild(document.createTextNode(t))});box.appendChild(li)})});
+L.appendChild(box);const f=document.createElement("p");f.className="sub";f.textContent=n+" बिंदु";L.appendChild(f)}
+const IMP=[[5,0],[5,1],[5,2],[6,0],[6,1],[6,2],[6,3],[0,4],[2,0],[4,2],[7,5],[7,6]];
+const dr=$("dr"),ov=$("ov"),mb=$("mb");
+function dOpen(o){dr.classList.toggle("on",o);ov.classList.toggle("on",o);mb.setAttribute("aria-expanded",o)}
+mb.onclick=()=>dOpen(!dr.classList.contains("on"));ov.onclick=()=>dOpen(false);document.addEventListener("keydown",e=>{if(e.key==="Escape")dOpen(false)});
+function goTo(i){cur=i;dOpen(false);nav();if(location.hash){back=null;location.hash=""}else render();scrollTo(0,0)}
+function dash(){const L=$("list");L.innerHTML="";const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const H=x=>L.appendChild(E("h3","dh2",x));
+let a=0,d=0;S.forEach((s,i)=>s.t.forEach((t,j)=>{a++;if(done[i+"-"+j])d++}));
+const cn=CA.reduce((n,m)=>n+Object.values(m.i).flat().length,0),g=E("div","dg");
+[[Math.round(d*100/a)+"%","कुल प्रगति"],[d+" / "+a,"पढ़े गए टॉपिक"],[Q.length,"प्रैक्टिस प्रश्न"],[cn,"करंट अफेयर्स बिंदु"]].forEach(([b,s])=>{const c=E("div","sc");c.append(E("b","",b),E("span","",s));g.appendChild(c)});L.appendChild(g);
+const lk=(i,j)=>{const k=i+"-"+j,c=E("div","tc"+(done[k]?" done":"")),a=E("a","tl",IC[i]+" "+trn(i,j,S[i].t[j])[0].replace(/^(अध्याय|अभ्यास): /,""));c.style.setProperty("--h",HU[i]);a.href="#t"+k;c.onclick=()=>{back=scrollY;location.hash="t"+k};c.appendChild(a);L.appendChild(c)};
+H("⭐ महत्वपूर्ण टॉपिक");IMP.forEach(([i,j])=>S[i]&&S[i].t[j]&&lk(i,j));
+let c=0;const nx=[];S.forEach((s,i)=>{const j=s.t.findIndex((t,j)=>!done[i+"-"+j]);if(j>=0&&c++<6)nx.push([i,j])});
+if(nx.length){H("▶ आगे पढ़ें");nx.forEach(([i,j])=>lk(i,j))}
+H("📚 विषय");const gs=E("div","dg");S.forEach((s,i)=>{let n=0;s.t.forEach((t,j)=>{if(done[i+"-"+j])n++});const t=E("div","sc st");t.style.setProperty("--h",HU[i]);t.append(E("b","",nm(i)),E("span","",n+" / "+s.t.length+" पढ़े"));const p=E("div","pb2"),f=E("i");f.style.width=Math.round(n*100/s.t.length)+"%";p.appendChild(f);t.appendChild(p);t.onclick=()=>goTo(i);gs.appendChild(t)});L.appendChild(gs);
+const m=CA[CA.length-1],st=Object.values(m.i).flat().filter(s=>s[0]==="!").slice(0,4);
+H("📰 करंट अफेयर्स · "+m.n);st.forEach(s=>L.appendChild(E("div","ci","⭐ "+s.slice(1).replace(/\{\{|\}\}/g,""))));
+const r=E("div");[["📰 सभी करंट अफेयर्स",-5],["📝 अभ्यास टेस्ट",-2],["📄 पुराने पेपर",-3],["📋 सिलेबस",-4]].forEach(([l,i])=>{const b=E("button","chip",l);b.onclick=()=>goTo(i);r.appendChild(b)});L.appendChild(r)}
 const TB={
 "2-0":["Divisibility: by 2 (last digit even), 3 (digit sum divisible by 3), 4 (last two digits), 9 (digit sum divisible by 9), 11 (difference of alternate digit sums is 0 or a multiple of 11)","HCF × LCM = product of the two numbers","Smallest prime is 2 (the only even prime); 1 is neither prime nor composite; there are 25 primes below 100","Perfect squares never end in 2, 3, 7 or 8; sum of first n natural numbers = n(n+1)/2"],
 "2-1":["Percentage = (part/whole)×100; 1/2=50%, 1/3=33.33%, 1/4=25%, 1/5=20%, 1/8=12.5%","Profit% = (profit/CP)×100; SP = CP×(100+profit%)/100. Always take CP as 100%. CP ₹500 with 20% profit gives SP ₹600","Discount is always on marked price. Two successive discounts a% and b% = a+b−ab/100 (10% and 20% = 28%)","x% increase followed by x% decrease = net decrease of x²/100 %"],
