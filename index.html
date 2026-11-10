@@ -169,6 +169,7 @@ details.sf>summary{padding:10px 12px;font-weight:600;cursor:pointer}details.sf>.
 .sfh{font:700 20px/1.4 "Kalam","Hind",sans-serif;color:var(--margin);margin:18px 0 4px}
 .nf input,.nf select,.nf textarea{width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border:2px solid var(--ink);border-radius:4px;background:var(--card);color:var(--text);font:inherit}.nf .go{margin:8px 8px 8px 0}.nf .tc{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between}
 #bk{display:block;position:sticky;top:6px;z-index:40;margin:8px 0 0;padding:8px 14px;border:2px solid var(--ink);border-radius:6px;background:var(--card);color:var(--ink);font:700 16px "Hind",sans-serif;cursor:pointer;box-shadow:2px 3px 0 var(--margin)}#bk[hidden]{display:none}
+.autabs{display:flex;gap:6px;margin-bottom:12px}.autabs button{flex:1;padding:8px;border:2px solid var(--ink);border-radius:6px 6px 0 0;background:var(--card);color:var(--ink);font:700 15px "Hind",sans-serif;cursor:pointer}.autabs button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
 </style>
 </head>
 <body>
@@ -1105,7 +1106,7 @@ if("serviceWorker" in navigator&&/^https?:/.test(location.protocol))addEventList
 </style>
 <script>
 (()=>{
-const FB={apiKey:"",authDomain:"",projectId:"",appId:""},ADMIN="";
+const FB={apiKey:"AIzaSyBZhD-rjy3Xyb5DPrH8jcLh-qEFP-OuTEc",authDomain:"supertetnotes-9b7c4.firebaseapp.com",projectId:"supertetnotes-9b7c4",storageBucket:"supertetnotes-9b7c4.firebasestorage.app",messagingSenderId:"145312470742",appId:"1:145312470742:web:bd593bf5b5072c4a3e1b77"},ADMIN="";
 if(!FB.apiKey)return;
 const V="10.12.2",KEYS=["stet-done","stet-up","stet-gk","stet-sk","stet-notes"];
 const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
@@ -1118,18 +1119,23 @@ for(const x of["app","auth","firestore"])await ld("https://www.gstatic.com/fireb
 firebase.initializeApp(FB);const A=firebase.auth(),DB=firebase.firestore();let me=null,tm=null,mode="in";
 const ov=E("div","au");document.body.appendChild(ov);
 const push=()=>{if(!me)return Promise.resolve();const d={};KEYS.forEach(k=>d[k]=rd(k));return DB.collection("users").doc(me.uid).set({name:me.displayName||"",email:me.email,lastSeen:Date.now(),data:JSON.stringify(d),c:{done:n(d["stet-done"]),up:n(d["stet-up"]),gk:n(d["stet-gk"]),sk:n(d["stet-sk"])}},{merge:true}).catch(()=>{})};
-const form=()=>{ov.innerHTML="";const c=E("div","auc"),up=mode==="up";
+const DOM="ritu-tet.app",toEm=x=>{x=x.trim().toLowerCase();return x.includes("@")?x:x+"@"+DOM},AE=ADMIN?toEm(ADMIN):"",idOf=e=>(e||"").endsWith("@"+DOM)?e.slice(0,-DOM.length-1):(e||"");
+const msg=e=>{const c=e.code||"";return /invalid-credential|user-not-found|wrong-password|invalid-email/.test(c)?T("ID या पासवर्ड गलत है","Wrong ID or password"):c.includes("email-already")?T("यह ID पहले से मौजूद है","This ID already exists"):c.includes("weak-password")?T("पासवर्ड कम से कम 6 अक्षर का रखें","Password must be at least 6 characters"):c.includes("too-many")?T("बहुत बार कोशिश हुई, थोड़ी देर बाद करें","Too many attempts, try later"):e.message};
+const form=()=>{ov.innerHTML="";const c=E("div","auc"),up=mode==="up",td=E("div","autabs");
+[["in",T("साइन इन","Sign in")],["up",T("साइन अप","Sign up")]].forEach(([m,l])=>{const b=E("button","",l);b.setAttribute("aria-pressed",mode===m);b.onclick=()=>{mode=m;form()};td.appendChild(b)});c.appendChild(td);
 c.appendChild(E("h2","",up?T("📝 नया खाता बनाएँ","📝 Create account"):T("🔐 साइन इन करें","🔐 Sign in")));
-const nm=E("input"),em=E("input"),pw=E("input"),ck=E("input"),er=E("p","aer");
-nm.type="text";nm.placeholder=T("आपका नाम","Your name");em.type="email";em.placeholder="Email";pw.type="password";pw.placeholder=T("पासवर्ड (कम से कम 6 अक्षर)","Password (min 6 characters)");ck.type="checkbox";
-if(up)c.appendChild(nm);c.append(em,pw);
-if(up){const l=E("label");l.append(ck,E("span","",T("मैं सहमत हूँ कि मेरा नाम, ईमेल और पढ़ाई की प्रगति एडमिन (रितु) को दिखेगी।","I agree that my name, email and study progress are visible to the admin (Ritu).")));c.appendChild(l)}
-const b=E("button","go",up?T("रजिस्टर करें","Register"):T("साइन इन","Sign in"));c.append(b,er);
-b.onclick=async()=>{er.textContent="";try{if(up){if(!nm.value.trim()||!ck.checked){er.textContent=T("नाम भरें और सहमति दें","Enter your name and accept");return}
-const r=await A.createUserWithEmailAndPassword(em.value.trim(),pw.value);await r.user.updateProfile({displayName:nm.value.trim()});me=A.currentUser;await push();tabs()}else await A.signInWithEmailAndPassword(em.value.trim(),pw.value)}catch(e){er.textContent=e.message}};
-const sw=E("a","",up?T("पहले से खाता है? साइन इन","Have an account? Sign in"):T("नया हूँ? रजिस्टर करें","New here? Register"));sw.onclick=()=>{mode=up?"in":"up";form()};
-c.append(E("p"),sw);
-if(!up){const f=E("a","",T("पासवर्ड भूल गए?","Forgot password?"));f.onclick=async()=>{try{await A.sendPasswordResetEmail(em.value.trim());er.textContent=T("रीसेट लिंक ईमेल पर भेज दिया","Reset link sent to your email")}catch(e){er.textContent=e.message}};c.append(E("br"),f)}
+const nm=E("input"),id=E("input"),pw=E("input"),p2=E("input"),ck=E("input"),er=E("p","aer");
+nm.type="text";nm.placeholder=T("आपका नाम","Your name");id.type="text";id.autocomplete="username";id.placeholder=T("आपकी ID (या ईमेल)","Your ID (or email)");pw.type="password";pw.autocomplete=up?"new-password":"current-password";pw.placeholder=T("पासवर्ड (कम से कम 6 अक्षर)","Password (min 6 characters)");p2.type="password";p2.placeholder=T("पासवर्ड दोबारा लिखें","Repeat password");ck.type="checkbox";
+if(up)c.appendChild(nm);c.append(id,pw);if(up)c.appendChild(p2);
+if(up){const l=E("label");l.append(ck,E("span","",T("मैं सहमत हूँ कि मेरा नाम, ID और पढ़ाई की प्रगति एडमिन (रितु) को दिखेगी।","I agree that my name, ID and study progress are visible to the admin (Ritu).")));c.appendChild(l)}
+const b=E("button","go",up?T("साइन अप करें","Sign up"):T("साइन इन","Sign in"));c.append(b,er);
+b.onclick=async()=>{er.textContent="";const v=id.value.trim();if(!v||!pw.value){er.textContent=T("ID और पासवर्ड लिखें","Enter ID and password");return}try{
+if(up){if(!nm.value.trim()||!ck.checked){er.textContent=T("नाम भरें और सहमति दें","Enter your name and accept");return}
+if(!v.includes("@")&&!/^[a-z0-9._-]{3,30}$/i.test(v)){er.textContent=T("ID में 3 से 30 अक्षर: a-z, 0-9, . _ -","ID: 3-30 characters of a-z, 0-9, . _ -");return}
+if(pw.value!==p2.value){er.textContent=T("दोनों पासवर्ड एक जैसे नहीं हैं","Passwords do not match");return}
+const r=await A.createUserWithEmailAndPassword(toEm(v),pw.value);await r.user.updateProfile({displayName:nm.value.trim()});me=A.currentUser;await push();tabs()}
+else await A.signInWithEmailAndPassword(toEm(v),pw.value)}catch(e){er.textContent=msg(e)}};
+if(!up){const f=E("a","",T("पासवर्ड भूल गए?","Forgot password?"));f.onclick=async()=>{const v=id.value.trim();if(!v.includes("@")){er.textContent=T("ID वाले खाते का पासवर्ड एडमिन से रीसेट करवाएँ","For an ID account, ask the admin to reset your password");return}try{await A.sendPasswordResetEmail(v);er.textContent=T("रीसेट लिंक ईमेल पर भेज दिया","Reset link sent to your email")}catch(e){er.textContent=msg(e)}};c.append(E("p"),f)}
 ov.appendChild(c)};
 A.onAuthStateChanged(async u=>{me=u;if(!u){ov.hidden=false;form();tabs();return}
 ov.hidden=true;const r=DB.collection("users").doc(u.uid),s=await r.get().catch(()=>null),ex=s&&s.exists?s.data():null;let ch=false;
@@ -1140,17 +1146,17 @@ if(ch&&!sessionStorage.rl){sessionStorage.rl=1;location.reload();return}tabs();r
 const out=async()=>{await push();await A.signOut();KEYS.concat(["stet-lang"]).forEach(k=>localStorage.removeItem(k));sessionStorage.clear();location.reload()};
 const t0=tabs;tabs=function(){t0();const t=$("tabs");if(!me)return;
 const bt=(l,f,h,p)=>{const b=E("button","",l);b.style.setProperty("--h",h);if(p!=null)b.setAttribute("aria-pressed",p);b.onclick=f;t.appendChild(b)};
-if(me.email===ADMIN)bt("👑 Admin",()=>goTo(-10),45,cur===-10);
+if(me.email===AE)bt("👑 Admin",()=>goTo(-10),45,cur===-10);
 bt("🚪 "+T("साइन आउट","Sign out")+" ("+(me.displayName||"").split(" ")[0]+")",out,0)};
-const r0=render;render=function(){if(cur===-10&&me&&me.email===ADMIN){document.body.classList.remove("dash");adm();return}r0()};
+const r0=render;render=function(){if(cur===-10&&me&&me.email===AE){document.body.classList.remove("dash");adm();return}r0()};
 async function adm(){const L=$("list");L.innerHTML="";L.appendChild(E("h2","","👑 "+T("सभी उपयोगकर्ता","All users")));const hn=E("p","hint",T("लोड हो रहा है…","Loading…"));L.appendChild(hn);
 let q;try{q=await DB.collection("users").get()}catch(e){hn.textContent=e.message;return}
 const us=q.docs.map(d=>d.data()).sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0)),tot=S.reduce((a,x)=>a+x.t.length,0),wk=us.filter(u=>Date.now()-(u.lastSeen||0)<6048e5).length;
 hn.textContent=T("कुल: ","Total: ")+us.length+" · "+T("इस हफ़्ते सक्रिय: ","Active this week: ")+wk;
 const f=t=>t?new Date(t).toLocaleString("en-IN",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"–",cd=u=>(u.c?(u.c.up||0)+(u.c.gk||0)+(u.c.sk||0):0);
-const w=E("div","adw"),tb=E("table","adt"),hd=E("tr");[T("नाम","Name"),"Email",T("जुड़े","Joined"),T("आख़िरी बार","Last seen"),T("खोला","Opens"),T("टॉपिक पढ़े","Topics done"),T("कार्ड याद","Cards learned")].forEach(h=>hd.appendChild(E("th","",h)));tb.appendChild(hd);
-us.forEach(u=>{const r=E("tr");[u.name||"–",u.email||"",f(u.joined),f(u.lastSeen),u.opens||0,((u.c||{}).done||0)+" / "+tot,cd(u)].forEach(v=>r.appendChild(E("td","",v)));tb.appendChild(r)});w.appendChild(tb);L.appendChild(w);
-const d=E("button","go",T("⬇ CSV डाउनलोड","⬇ Download CSV"));d.onclick=()=>{const rows=[["name","email","joined","lastSeen","opens","topicsDone","cardsLearned"],...us.map(u=>[u.name,u.email,u.joined?new Date(u.joined).toISOString():"",u.lastSeen?new Date(u.lastSeen).toISOString():"",u.opens||0,(u.c||{}).done||0,cd(u)])];
+const w=E("div","adw"),tb=E("table","adt"),hd=E("tr");[T("नाम","Name"),"ID",T("जुड़े","Joined"),T("आख़िरी बार","Last seen"),T("खोला","Opens"),T("टॉपिक पढ़े","Topics done"),T("कार्ड याद","Cards learned")].forEach(h=>hd.appendChild(E("th","",h)));tb.appendChild(hd);
+us.forEach(u=>{const r=E("tr");[u.name||"–",idOf(u.email),f(u.joined),f(u.lastSeen),u.opens||0,((u.c||{}).done||0)+" / "+tot,cd(u)].forEach(v=>r.appendChild(E("td","",v)));tb.appendChild(r)});w.appendChild(tb);L.appendChild(w);
+const d=E("button","go",T("⬇ CSV डाउनलोड","⬇ Download CSV"));d.onclick=()=>{const rows=[["name","id","joined","lastSeen","opens","topicsDone","cardsLearned"],...us.map(u=>[u.name,idOf(u.email),u.joined?new Date(u.joined).toISOString():"",u.lastSeen?new Date(u.lastSeen).toISOString():"",u.opens||0,(u.c||{}).done||0,cd(u)])];
 const b=new Blob(["\ufeff"+rows.map(r=>r.map(x=>'"'+String(x==null?"":x).replace(/"/g,'""')+'"').join(",")).join("\n")],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="ritu-tet-users.csv";a.click()};L.appendChild(d)}
 })()})();
 </script>
