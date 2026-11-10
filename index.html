@@ -167,6 +167,8 @@ details{border-radius:6px}
 details.sf>summary{padding:10px 12px;font-weight:600;cursor:pointer}details.sf>.tc,details.sf>.go,details.sf>.nsub,details.sf>p{margin:6px 10px 10px}
 .nsub{display:flex;flex-wrap:wrap;gap:6px}.nsub span{background:var(--chip);border:1px solid var(--line);border-radius:14px;padding:3px 10px;font-size:14px}
 .sfh{font:700 20px/1.4 "Kalam","Hind",sans-serif;color:var(--margin);margin:18px 0 4px}
+.nf input,.nf select,.nf textarea{width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border:2px solid var(--ink);border-radius:4px;background:var(--card);color:var(--text);font:inherit}.nf .go{margin:8px 8px 8px 0}.nf .tc{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+#bk{display:block;position:sticky;top:6px;z-index:40;margin:8px 0 0;padding:8px 14px;border:2px solid var(--ink);border-radius:6px;background:var(--card);color:var(--ink);font:700 16px "Hind",sans-serif;cursor:pointer;box-shadow:2px 3px 0 var(--margin)}#bk[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -295,7 +297,7 @@ function nav(){const n=$("dl");n.innerHTML="";const sec=t=>{const h=document.cre
 const add=(l,i,h)=>{const b=document.createElement("button");b.className="it";b.textContent=l;b.setAttribute("aria-pressed",cur===i);b.style.setProperty("--h",h);b.onclick=()=>goTo(i);n.appendChild(b)};
 add("🏠 डैशबोर्ड",-6,20);add("📚 "+T("सभी टॉपिक","All topics"),-1,250);sec(T("विषय","SUBJECTS"));S.forEach((x,i)=>add(nm(i),i,HU[i]));sec(T("अभ्यास और जानकारी","PRACTICE & INFO"));
 add("📝 "+T("अभ्यास टेस्ट","Practice Test"),-2,340);add("📄 "+T("पुराने पेपर","Past Papers"),-3,30);add("📋 "+T("सिलेबस","Syllabus"),-4,160);tabs()}
-function tabs(){const t=$("tabs");t.innerHTML="";[["🏠 "+T("होम","Home"),-6,250],["📝 "+T("अभ्यास टेस्ट","Practice Test"),-2,340],["📄 "+T("पुराने पेपर","Past Papers"),-3,30],["📋 "+T("सिलेबस","Syllabus"),-4,160]].forEach(([l,i,h])=>{const b=document.createElement("button");b.textContent=l;b.setAttribute("aria-pressed",cur===i);b.style.setProperty("--h",h);b.onclick=()=>goTo(i);t.appendChild(b)})}
+function tabs(){const t=$("tabs");t.innerHTML="";[["🏠 "+T("होम","Home"),-6,250],["📝 "+T("अभ्यास टेस्ट","Practice Test"),-2,340],["📄 "+T("पुराने पेपर","Past Papers"),-3,30],["📋 "+T("सिलेबस","Syllabus"),-4,160],["✍️ "+T("नोट जोड़ें","Add Note"),-12,45]].forEach(([l,i,h])=>{const b=document.createElement("button");b.textContent=l;b.setAttribute("aria-pressed",cur===i);b.style.setProperty("--h",h);b.onclick=()=>goTo(i);t.appendChild(b)})}
 function render(){document.body.classList.toggle("dash",cur===-6);const hm=/^#t(\d+)-(\d+)$/.exec(location.hash);if(hm&&S[hm[1]]&&S[hm[1]].t[hm[2]]){page(+hm[1],+hm[2]);return}if(cur===-2){quiz();return}if(cur===-3){pyq();return}if(cur===-4){syl();return}if(cur===-5){ca();return}if(cur===-9){deck("sk");return}if(cur===-8){gk();return}if(cur===-7){up();return}if(cur===-6){dash();return}const q=$("q").value.trim().toLowerCase(),L=$("list");L.innerHTML="";let any=false;
 S.forEach((s,i)=>{if(cur!==-1&&cur!==i)return;
 const items=s.t.map((t,j)=>[trn(i,j,t),j]).filter(([t])=>!q||(t[0]+t[1].join(" ")).toLowerCase().includes(q));
@@ -1017,6 +1019,33 @@ w.appendChild(dt)});L.appendChild(w)}
 function pif(n){const L=$("list"),dt=document.createElement("details");dt.className="sf";dt.style.setProperty("--h",[340,30,160][n]);dt.open=true;const sm=document.createElement("summary");sm.textContent="📁 "+PIF[n].length+" "+T("फ़ोल्डर","folders");dt.appendChild(sm);
 PIF[n].forEach((x,k)=>{const e=document.createElement("p");e.className="hint";e.textContent=String(k+1).padStart(2,"0")+". "+x;dt.appendChild(e)});L.insertBefore(dt,L.firstChild)}
 const rdF=render;render=function(){rdF();if(cur>=0&&cur<=9&&!$("q").value.trim())fold(cur);else if(cur<=-2&&cur>=-4)pif(-cur-2)};
+
+const UN=(()=>{try{return JSON.parse(localStorage.getItem("stet-notes")||"[]")}catch(e){return[]}})();
+function pn(x){const r=[];let h=null,q=null;x.split("\n").forEach(l=>{const t=l.trim();if(!t)return;
+if(t.startsWith("## ")){if(!h){h=["नोट",[]];r.push(h)}q=[t.slice(3),""];h[1].push(q)}
+else if(t.startsWith("# ")){h=[t.slice(2),[]];r.push(h);q=null}
+else{if(!h){h=["नोट",[]];r.push(h)}if(!q){q=["विवरण",""];h[1].push(q)}q[1]+=(q[1]?" ":"")+t.replace(/^[-*•]\s*/,"")}});return r}
+UN.forEach(n=>{if(!S[n.i])return;const j=S[n.i].t.length;S[n.i].t.push(HS(n.t,pn(n.x)));(MP[n.i]=MP[n.i]||[])[j]=n.k;n.j=j;if(sessionStorage.on===n.id){sessionStorage.removeItem("on");location.hash="#t"+n.i+"-"+j}});
+function notef(ed){const L=$("list");L.innerHTML="";const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const w=E("div","nf");L.appendChild(w);w.appendChild(E("h2","",ed?T("✏️ नोट बदलें","✏️ Edit note"):T("✍️ नोट जोड़ें","✍️ Add a note")));
+w.appendChild(E("p","hint",T("विषय और फ़ोल्डर चुनें, फिर लिखें। '# हेडिंग' से हेडिंग, '## सबहेडिंग' से सबहेडिंग बनती है; उसके नीचे का टेक्स्ट उसी सबहेडिंग में जाता है।","Choose subject and folder, then write. '# Heading' makes a heading, '## Subheading' a subheading; text below goes under it.")));
+const ss=E("select"),sk=E("select"),ti=E("input"),ta=E("textarea"),er=E("p","aer");
+S.forEach((x,i)=>{const o=E("option","",(IC[i]||"")+" "+x.n);o.value=i;ss.appendChild(o)});
+const fk=()=>{sk.innerHTML="";FD[+ss.value].forEach((n,x)=>{const o=E("option","",String(x+1).padStart(2,"0")+". "+n);o.value=x+1;sk.appendChild(o)})};
+ss.onchange=fk;ti.placeholder=T("चैप्टर का नाम","Chapter title");ta.rows=14;ta.placeholder="# 1. मुख्य हेडिंग\n## पहली सबहेडिंग\nयहाँ नोट लिखें...\n## दूसरी सबहेडिंग\nयहाँ नोट लिखें...";
+if(ed){ss.value=ed.i;fk();sk.value=ed.k;ti.value=ed.t;ta.value=ed.x}else fk();
+const sv=E("button","go",T("💾 सेव करें","💾 Save"));
+sv.onclick=()=>{const t=ti.value.trim(),x=ta.value.trim();if(!t||!x){er.textContent=T("चैप्टर का नाम और नोट दोनों लिखें","Write both the chapter title and the note");return}
+let a=[...UN];const id=ed?ed.id:Date.now().toString(36);const o={id,i:+ss.value,k:+sk.value,t,x};if(ed)a=a.map(z=>z.id===id?o:z);else a.push(o);
+const cl=a.map(z=>({id:z.id,i:z.i,k:z.k,t:z.t,x:z.x}));localStorage.setItem("stet-notes",JSON.stringify(cl));sessionStorage.on=id;location.reload()};
+w.append(ss,sk,ti,ta,sv,er);
+if(ed){const c=E("button","chip",T("रद्द करें","Cancel"));c.onclick=()=>notef();w.appendChild(c)}
+w.appendChild(E("h3","dh2","📚 "+T("मेरे जोड़े गए नोट","My notes")+" ("+UN.length+")"));
+if(!UN.length)w.appendChild(E("p","hint",T("अभी कोई नोट नहीं जोड़ा।","No notes added yet.")));
+UN.forEach(n=>{const r=E("div","tc"),b=E("div");b.appendChild(E("b","",n.t));b.appendChild(E("div","hint",(IC[n.i]||"")+" "+S[n.i].n+" › "+String(n.k).padStart(2,"0")+". "+FD[n.i][n.k-1]));r.appendChild(b);
+const o=E("button","chip",T("खोलें","Open"));o.onclick=()=>{location.hash="#t"+n.i+"-"+n.j};const e=E("button","chip","✏️");e.onclick=()=>notef(n);
+const d=E("button","chip","🗑");d.onclick=()=>{if(confirm(T("यह नोट हटाएँ?","Delete this note?"))){localStorage.setItem("stet-notes",JSON.stringify(UN.filter(z=>z.id!==n.id).map(z=>({id:z.id,i:z.i,k:z.k,t:z.t,x:z.x}))));location.reload()}};r.append(o,e,d);w.appendChild(r)})}
+const rdN=render;render=function(){if(cur===-12){document.body.classList.remove("dash");notef();return}rdN()};
 const trn=(i,j,t)=>lang!=="en"?t:[TT[i+"-"+j]||t[0],TB[i+"-"+j]||(i===1?t[1]:["(English version coming soon. Hindi notes shown below.)",...t[1]]),t[2]];
 function page(i,j){const L=$("list");L.innerHTML="";const t=trn(i,j,S[i].t[j]),k=i+"-"+j,w=document.createElement("div");w.className="tp";w.style.setProperty("--h",HU[i]);document.title=t[0];
 const bk=()=>{const a=document.createElement("a");a.className="back";a.href="#";a.textContent="← "+T("सभी टॉपिक","All topics");return a};
@@ -1055,6 +1084,15 @@ $("q").placeholder=T("टॉपिक खोजें, जैसे: संध�
 $("lg").textContent=T("English","हिंदी");nav();render()}
 $("lg").onclick=()=>{lang=lang==="en"?"hi":"en";try{localStorage.setItem("stet-lang",lang)}catch(e){}applyLang()};
 $("q").oninput=()=>{if(cur<=-2){cur=-1;nav()}render()};
+
+{const hs=[];let hn=0;const g0=goTo;
+goTo=function(i){const p=cur;if(i!==p)hs.push(p);if(location.hash)try{history.replaceState({c:p},"",location.pathname+location.search)}catch(e){}g0(i);try{history.pushState({c:i},"",location.pathname+location.search)}catch(e){}};
+try{history.replaceState({c:cur},"",location.pathname+location.search+location.hash)}catch(e){}
+addEventListener("hashchange",()=>{hn++});
+addEventListener("popstate",e=>{const c=e.state&&e.state.c;if(typeof c==="number"&&c!==cur){if(hs.length&&hs[hs.length-1]===c)hs.pop();else hs.push(cur);cur=c;dOpen(false);nav();render();scrollTo(0,0)}});
+const bk=document.createElement("button");bk.id="bk";const tb=$("tabs");tb.parentNode.insertBefore(bk,tb);
+bk.onclick=()=>{if(location.hash){if(hn>0)history.back();else{try{history.replaceState({c:cur},"",location.pathname+location.search)}catch(e){}route()}return}if(hs.length)history.back();else goTo(-6)};
+const rB=render;render=function(){rB();bk.textContent=T("← वापस","← Back");bk.hidden=!(cur!==-6||location.hash)}}
 window.onhashchange=route;applyLang();route();
 if("serviceWorker" in navigator&&/^https?:/.test(location.protocol))addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 </script>
@@ -1069,12 +1107,12 @@ if("serviceWorker" in navigator&&/^https?:/.test(location.protocol))addEventList
 (()=>{
 const FB={apiKey:"",authDomain:"",projectId:"",appId:""},ADMIN="";
 if(!FB.apiKey)return;
-const V="10.12.2",KEYS=["stet-done","stet-up","stet-gk","stet-sk"];
+const V="10.12.2",KEYS=["stet-done","stet-up","stet-gk","stet-sk","stet-notes"];
 const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const ld=u=>new Promise((r,j)=>{const s=document.createElement("script");s.src=u;s.onload=r;s.onerror=j;document.head.appendChild(s)});
 const rd=k=>{try{return JSON.parse(localStorage.getItem(k)||"{}")}catch(e){return{}}};
 const n=o=>Array.isArray(o)?o.length:Object.keys(o||{}).length;
-const mg=(a,b)=>(Array.isArray(a)||Array.isArray(b))?[...new Set([...(Array.isArray(a)?a:Object.keys(a||{})),...(Array.isArray(b)?b:Object.keys(b||{}))])]:Object.assign({},b,a);
+const mg=(a,b)=>{const ar=x=>Array.isArray(x)?x:[];if((Array.isArray(a)||Array.isArray(b))&&[...ar(a),...ar(b)].some(o=>o&&typeof o==="object")){const by={};[...ar(b),...ar(a)].forEach(o=>by[o.id]=o);return Object.values(by)}return(Array.isArray(a)||Array.isArray(b))?[...new Set([...(Array.isArray(a)?a:Object.keys(a||{})),...(Array.isArray(b)?b:Object.keys(b||{}))])]:Object.assign({},b,a)};
 (async()=>{
 for(const x of["app","auth","firestore"])await ld("https://www.gstatic.com/firebasejs/"+V+"/firebase-"+x+"-compat.js");
 firebase.initializeApp(FB);const A=firebase.auth(),DB=firebase.firestore();let me=null,tm=null,mode="in";
