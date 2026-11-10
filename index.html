@@ -170,6 +170,21 @@ details.sf>summary{padding:10px 12px;font-weight:600;cursor:pointer}details.sf>.
 .nf input,.nf select,.nf textarea{width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border:2px solid var(--ink);border-radius:4px;background:var(--card);color:var(--text);font:inherit}.nf .go{margin:8px 8px 8px 0}.nf .tc{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between}
 #bk{display:block;position:sticky;top:6px;z-index:40;margin:8px 0 0;padding:8px 14px;border:2px solid var(--ink);border-radius:6px;background:var(--card);color:var(--ink);font:700 16px "Hind",sans-serif;cursor:pointer;box-shadow:2px 3px 0 var(--margin)}#bk[hidden]{display:none}
 .autabs{display:flex;gap:6px;margin-bottom:12px}.autabs button{flex:1;padding:8px;border:2px solid var(--ink);border-radius:6px 6px 0 0;background:var(--card);color:var(--ink);font:700 15px "Hind",sans-serif;cursor:pointer}.autabs button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.au{background:linear-gradient(135deg,#4f46e5 0%,#c026d3 45%,#f97316 100%)}
+.au::before,.au::after{content:"";position:fixed;border-radius:50%;filter:blur(60px);opacity:.55;pointer-events:none}
+.au::before{width:340px;height:340px;background:#22d3ee;left:-80px;top:-60px}.au::after{width:380px;height:380px;background:#facc15;right:-100px;bottom:-80px}
+.afl{position:fixed;font-size:34px;pointer-events:none;animation:fl 6s ease-in-out infinite;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3))}
+@keyframes fl{50%{transform:translateY(-18px) rotate(8deg)}}@media (prefers-reduced-motion:reduce){.afl{animation:none}}
+.auc{position:relative;z-index:1;border:0;border-radius:24px;padding:22px;overflow:hidden;max-width:400px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.auh{margin:-22px -22px 16px;padding:26px 22px 20px;background:linear-gradient(120deg,#6366f1,#ec4899 60%,#f59e0b);color:#fff;text-align:center}
+.auE{font-size:46px;line-height:1}.aut{font:700 22px/1.3 "Tiro Devanagari Hindi","Hind",serif;margin-top:6px}.aus{font-size:14px;opacity:.95;margin-top:4px}
+.autabs{background:var(--chip);border-radius:999px;padding:4px;gap:4px}
+.autabs button{border:0;border-radius:999px;background:transparent;color:var(--ink);padding:9px}
+.autabs button[aria-pressed=true]{background:linear-gradient(120deg,#6366f1,#ec4899);color:#fff;box-shadow:0 4px 12px rgba(236,72,153,.45)}
+.auc input[type=text],.auc input[type=email],.auc input[type=password]{border:2px solid transparent;background:var(--chip);border-radius:12px;padding:12px 14px}
+.auc input:focus{outline:0;border-color:#ec4899;box-shadow:0 0 0 4px rgba(236,72,153,.2)}
+.auc .go{background:linear-gradient(120deg,#6366f1,#ec4899 55%,#f59e0b);color:#fff;border:0;border-radius:14px;padding:13px;font-size:17px;box-shadow:0 8px 20px rgba(236,72,153,.4)}
+.auc a{color:#6366f1;font-weight:600}
 </style>
 </head>
 <body>
@@ -1121,9 +1136,9 @@ const ov=E("div","au");document.body.appendChild(ov);
 const push=()=>{if(!me)return Promise.resolve();const d={};KEYS.forEach(k=>d[k]=rd(k));return DB.collection("users").doc(me.uid).set({name:me.displayName||"",email:me.email,lastSeen:Date.now(),data:JSON.stringify(d),c:{done:n(d["stet-done"]),up:n(d["stet-up"]),gk:n(d["stet-gk"]),sk:n(d["stet-sk"])}},{merge:true}).catch(()=>{})};
 const DOM="ritu-tet.app",toEm=x=>{x=x.trim().toLowerCase();return x.includes("@")?x:x+"@"+DOM},AE=ADMIN?toEm(ADMIN):"",idOf=e=>(e||"").endsWith("@"+DOM)?e.slice(0,-DOM.length-1):(e||"");
 const msg=e=>{const c=e.code||"";return /invalid-credential|user-not-found|wrong-password|invalid-email/.test(c)?T("ID या पासवर्ड गलत है","Wrong ID or password"):c.includes("email-already")?T("यह ID पहले से मौजूद है","This ID already exists"):c.includes("weak-password")?T("पासवर्ड कम से कम 6 अक्षर का रखें","Password must be at least 6 characters"):c.includes("too-many")?T("बहुत बार कोशिश हुई, थोड़ी देर बाद करें","Too many attempts, try later"):e.message};
-const form=()=>{ov.innerHTML="";const c=E("div","auc"),up=mode==="up",td=E("div","autabs");
-[["in",T("साइन इन","Sign in")],["up",T("साइन अप","Sign up")]].forEach(([m,l])=>{const b=E("button","",l);b.setAttribute("aria-pressed",mode===m);b.onclick=()=>{mode=m;form()};td.appendChild(b)});c.appendChild(td);
-c.appendChild(E("h2","",up?T("📝 नया खाता बनाएँ","📝 Create account"):T("🔐 साइन इन करें","🔐 Sign in")));
+const form=()=>{ov.innerHTML="";[["📚",6,12],["✏️",84,8],["🎓",10,70],["🕉️",86,62],["🌍",48,4],["💡",90,36],["➕",4,40],["🔬",70,88]].forEach(([e,l,t],i)=>{const d=E("span","afl",e);d.style.left=l+"%";d.style.top=t+"%";d.style.animationDelay=(i*0.7)+"s";ov.appendChild(d)});const c=E("div","auc"),up=mode==="up",td=E("div","autabs");
+[["in",T("साइन इन","Sign in")],["up",T("साइन अप","Sign up")]].forEach(([m,l])=>{const b=E("button","",l);b.setAttribute("aria-pressed",mode===m);b.onclick=()=>{mode=m;form()};td.appendChild(b)});const hr=E("div","auh");hr.append(E("div","auE","📚"),E("div","aut",T("रितु के सुपर TET नोट्स","Ritu's Super TET Notes")),E("div","aus",T("पढ़ाई शुरू करने के लिए लॉगिन करें","Log in to start studying")));c.append(hr,td);
+
 const nm=E("input"),id=E("input"),pw=E("input"),p2=E("input"),ck=E("input"),er=E("p","aer");
 nm.type="text";nm.placeholder=T("आपका नाम","Your name");id.type="text";id.autocomplete="username";id.placeholder=T("आपकी ID (या ईमेल)","Your ID (or email)");pw.type="password";pw.autocomplete=up?"new-password":"current-password";pw.placeholder=T("पासवर्ड (कम से कम 6 अक्षर)","Password (min 6 characters)");p2.type="password";p2.placeholder=T("पासवर्ड दोबारा लिखें","Repeat password");ck.type="checkbox";
 if(up)c.appendChild(nm);c.append(id,pw);if(up)c.appendChild(p2);
