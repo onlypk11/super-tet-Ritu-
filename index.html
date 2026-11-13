@@ -185,6 +185,7 @@ details.sf>summary{padding:10px 12px;font-weight:600;cursor:pointer}details.sf>.
 .auc input:focus{outline:0;border-color:#ec4899;box-shadow:0 0 0 4px rgba(236,72,153,.2)}
 .auc .go{background:linear-gradient(120deg,#6366f1,#ec4899 55%,#f59e0b);color:#fff;border:0;border-radius:14px;padding:13px;font-size:17px;box-shadow:0 8px 20px rgba(236,72,153,.4)}
 .auc a{color:#6366f1;font-weight:600}
+.auc input[type=tel]{width:100%;box-sizing:border-box;margin:6px 0;padding:12px 14px;border:2px solid transparent;background:var(--chip);border-radius:12px;color:var(--text);font:inherit}.auc input[type=tel]:focus{outline:0;border-color:#ec4899;box-shadow:0 0 0 4px rgba(236,72,153,.2)}.auc .chip{margin:6px 0}
 </style>
 </head>
 <body>
@@ -1155,20 +1156,21 @@ for(const x of["app","auth","firestore"])await ld("https://www.gstatic.com/fireb
 firebase.initializeApp(FB);const A=firebase.auth(),DB=firebase.firestore();let me=null,tm=null,mode="in";
 const ov=E("div","au");document.body.appendChild(ov);
 const push=()=>{if(!me)return Promise.resolve();const d={};KEYS.forEach(k=>d[k]=rd(k));return DB.collection("users").doc(me.uid).set({name:me.displayName||"",email:me.email,lastSeen:Date.now(),data:JSON.stringify(d),c:{done:n(d["stet-done"]),up:n(d["stet-up"]),gk:n(d["stet-gk"]),sk:n(d["stet-sk"])}},{merge:true}).catch(()=>{})};
-const DOM="ritu-tet.app",toEm=x=>{x=x.trim().toLowerCase();if(x.includes("@"))return x;const d=x.replace(/\D/g,"");if(d.length>=10&&/^[+\d\s-]+$/.test(x))return(d.length===10?"91"+d:d)+"@"+DOM;return x+"@"+DOM},AE=ADMIN?toEm(ADMIN):"",idOf=e=>(e||"").endsWith("@"+DOM)?e.slice(0,-DOM.length-1):(e||"");
+const nd=v=>{let d=v.replace(/\D/g,"");if(d.length===12&&d.startsWith("91"))d=d.slice(2);else if(d.length===11&&d.startsWith("0"))d=d.slice(1);return d};
+const DOM="ritu-tet.app",toEm=x=>{x=x.trim().toLowerCase();if(x.includes("@"))return x;const d=x.replace(/\D/g,"");if(d.length>=10&&/^[+\d\s-]+$/.test(x)){const n=nd(x);return(n.length===10?"91"+n:d)+"@"+DOM}return x+"@"+DOM},AE=ADMIN?toEm(ADMIN):"",idOf=e=>(e||"").endsWith("@"+DOM)?e.slice(0,-DOM.length-1):(e||"");
 const msg=e=>{const c=e.code||"";return /invalid-credential|user-not-found|wrong-password|invalid-email/.test(c)?T("ईमेल/मोबाइल या पासवर्ड गलत है","Wrong email/mobile or password"):c.includes("email-already")||c.includes("credential-already")?T("यह ईमेल/मोबाइल पहले से रजिस्टर है, साइन इन करें","Already registered, please sign in"):c.includes("weak-password")?T("पासवर्ड कम से कम 6 अक्षर का रखें","Password must be at least 6 characters"):c.includes("too-many")?T("बहुत बार कोशिश हुई, थोड़ी देर बाद करें","Too many attempts, try later"):c.includes("operation-not-allowed")?T("यह तरीका अभी चालू नहीं है (Firebase में चालू करना होगा)","This method is not enabled yet (enable it in Firebase)"):/invalid-verification-code/.test(c)?T("OTP गलत है","Wrong OTP"):/code-expired/.test(c)?T("OTP की समय सीमा खत्म, दोबारा भेजें","OTP expired, resend"):/invalid-phone/.test(c)?T("मोबाइल नंबर सही नहीं है","Invalid mobile number"):/billing|quota|captcha/.test(c)?T("SMS सेवा अभी उपलब्ध नहीं (Blaze प्लान/सेटिंग जाँचें)","SMS service unavailable (check Blaze plan/settings)"):e.message};
 let meth="em",cf=null,rvf=null;
 const bg=()=>{ov.innerHTML="";[["📚",6,12],["✏️",84,8],["🎓",10,70],["🕉️",86,62],["🌍",48,4],["💡",90,36],["➕",4,40],["🔬",70,88]].forEach(([e,l,t],i)=>{const d=E("span","afl",e);d.style.left=l+"%";d.style.top=t+"%";d.style.animationDelay=(i*0.7)+"s";ov.appendChild(d)})};
 const hero=(sub)=>{const hr=E("div","auh");hr.append(E("div","auE","📚"),E("div","aut",T("रितु के सुपर TET नोट्स","Ritu's Super TET Notes")),E("div","aus",sub));return hr};
 const form=()=>{bg();const c=E("div","auc"),up=mode==="up",td=E("div","autabs");
 [["in",T("साइन इन","Sign in")],["up",T("साइन अप","Sign up")]].forEach(([m,l])=>{const b=E("button","",l);b.setAttribute("aria-pressed",mode===m);b.onclick=()=>{mode=m;form()};td.appendChild(b)});c.append(hero(T("पढ़ाई शुरू करने के लिए लॉगिन करें","Log in to start studying")),td);
-const nm=E("input"),id=E("input"),mb=E("input"),otp=E("input"),pw=E("input"),p2=E("input"),ck=E("input"),er=E("p","aer"),rc=E("div");
+const nm=E("input"),id=E("input"),mb=E("input"),po=E("p","aer"),otp=E("input"),pw=E("input"),p2=E("input"),ck=E("input"),er=E("p","aer"),rc=E("div");
 nm.type="text";nm.placeholder=T("आपका नाम","Your name");id.type="text";id.autocomplete="username";id.placeholder=up?"Email":T("ईमेल या मोबाइल नंबर","Email or mobile number");mb.type="tel";mb.placeholder=T("मोबाइल नंबर (10 अंक)","Mobile number (10 digits)");otp.type="text";otp.inputMode="numeric";otp.maxLength=6;otp.placeholder=T("6 अंकों का OTP","6-digit OTP");otp.hidden=true;
 pw.type="password";pw.autocomplete=up?"new-password":"current-password";pw.placeholder=T("पासवर्ड (कम से कम 6 अक्षर)","Password (min 6 characters)");p2.type="password";p2.placeholder=T("पासवर्ड दोबारा लिखें","Repeat password");ck.type="checkbox";
 const ph=up&&meth==="ph";
 if(up){const mt=E("div","autabs");[["em","📧 "+T("ईमेल","Email")],["ph","📱 "+T("मोबाइल","Mobile")]].forEach(([m,l])=>{const x=E("button","",l);x.setAttribute("aria-pressed",meth===m);x.onclick=()=>{meth=m;form()};mt.appendChild(x)});c.append(mt,nm);
-if(ph){const so=E("button","chip",T("📨 OTP भेजें","📨 Send OTP"));so.onclick=async()=>{er.textContent="";const d=mb.value.replace(/\D/g,"").slice(-10);if(d.length!==10){er.textContent=T("10 अंकों का मोबाइल नंबर लिखें","Enter a 10-digit mobile number");return}
-try{if(!rvf)rvf=new firebase.auth.RecaptchaVerifier(rc,{size:"invisible"});cf=await A.signInWithPhoneNumber("+91"+d,rvf);otp.hidden=false;er.textContent=T("OTP भेज दिया गया, नीचे लिखें","OTP sent, enter it below")}catch(e){er.textContent=msg(e);try{rvf.clear()}catch(_){}rvf=null}};c.append(mb,so,otp,rc)}else c.appendChild(id)}
+if(ph){const so=E("button","chip",T("📨 OTP भेजें","📨 Send OTP"));so.onclick=async()=>{po.textContent="";const d=nd(mb.value),n0=mb.value.replace(/\D/g,"").length;if(!/^[6-9]\d{9}$/.test(d)){po.textContent=T("मोबाइल नंबर 10 अंकों का होना चाहिए (6 से 9 से शुरू)। आपने "+n0+" अंक लिखे हैं।","Mobile number must be 10 digits (starting 6-9). You typed "+n0+" digits.");return}po.textContent=T("OTP भेजा जा रहा है…","Sending OTP…");
+try{if(!rvf)rvf=new firebase.auth.RecaptchaVerifier(rc,{size:"invisible"});cf=await A.signInWithPhoneNumber("+91"+d,rvf);otp.hidden=false;po.textContent=T("✅ OTP भेज दिया गया, नीचे लिखें","✅ OTP sent, enter it below")}catch(e){po.textContent=msg(e)+(e.code?" ("+e.code+")":"");try{rvf.clear()}catch(_){}rvf=null}};c.append(mb,so,po,otp,rc)}else c.appendChild(id)}
 else c.appendChild(id);
 c.append(pw);if(up)c.appendChild(p2);
 if(up){const l=E("label");l.append(ck,E("span","",T("मैं सहमत हूँ कि मेरा नाम, ईमेल/मोबाइल और पढ़ाई की प्रगति एडमिन (रितु) को दिखेगी।","I agree that my name, email/mobile and study progress are visible to the admin (Ritu).")));c.appendChild(l)}
@@ -1178,7 +1180,7 @@ if(!up){if(!v||!pw.value){er.textContent=T("ईमेल/मोबाइल औ�
 if(!nm.value.trim()||!ck.checked){er.textContent=T("नाम भरें और सहमति दें","Enter your name and accept");return}
 if(pw.value.length<6){er.textContent=T("पासवर्ड कम से कम 6 अक्षर का रखें","Password must be at least 6 characters");return}
 if(pw.value!==p2.value){er.textContent=T("दोनों पासवर्ड एक जैसे नहीं हैं","Passwords do not match");return}
-if(ph){const d=mb.value.replace(/\D/g,"").slice(-10);if(!cf||otp.value.trim().length!==6){er.textContent=T("पहले OTP भेजें और 6 अंक लिखें","Send the OTP first and enter the 6 digits");return}
+if(ph){const d=nd(mb.value);if(!/^[6-9]\d{9}$/.test(d)){er.textContent=T("मोबाइल नंबर 10 अंकों का होना चाहिए","Mobile number must be 10 digits");return}if(!cf||otp.value.trim().length!==6){er.textContent=T("पहले OTP भेजें और 6 अंक लिखें","Send the OTP first and enter the 6 digits");return}
 const r=await cf.confirm(otp.value.trim());if(!r.additionalUserInfo.isNewUser){await A.signOut();er.textContent=T("यह नंबर पहले से रजिस्टर है, साइन इन करें","This number is already registered, please sign in");return}
 await r.user.linkWithCredential(firebase.auth.EmailAuthProvider.credential(toEm(d),pw.value));await r.user.updateProfile({displayName:nm.value.trim()});me=A.currentUser;await push();tabs();return}
 if(!/^\S+@\S+\.\S+$/.test(v)){er.textContent=T("सही ईमेल लिखें","Enter a valid email");return}
