@@ -1162,7 +1162,7 @@ const msg=e=>{const c=e.code||"";return /invalid-credential|user-not-found|wrong
 let meth="em",cf=null,rvf=null;
 const bg=()=>{ov.innerHTML="";[["📚",6,12],["✏️",84,8],["🎓",10,70],["🕉️",86,62],["🌍",48,4],["💡",90,36],["➕",4,40],["🔬",70,88]].forEach(([e,l,t],i)=>{const d=E("span","afl",e);d.style.left=l+"%";d.style.top=t+"%";d.style.animationDelay=(i*0.7)+"s";ov.appendChild(d)})};
 const hero=(sub)=>{const hr=E("div","auh");hr.append(E("div","auE","📚"),E("div","aut",T("रितु के सुपर TET नोट्स","Ritu's Super TET Notes")),E("div","aus",sub));return hr};
-const form=()=>{bg();const c=E("div","auc"),up=mode==="up",td=E("div","autabs");
+const form=()=>{try{if(rvf)rvf.clear()}catch(_){}rvf=null;cf=null;bg();const c=E("div","auc"),up=mode==="up",td=E("div","autabs");
 [["in",T("साइन इन","Sign in")],["up",T("साइन अप","Sign up")]].forEach(([m,l])=>{const b=E("button","",l);b.setAttribute("aria-pressed",mode===m);b.onclick=()=>{mode=m;form()};td.appendChild(b)});c.append(hero(T("पढ़ाई शुरू करने के लिए लॉगिन करें","Log in to start studying")),td);
 const nm=E("input"),id=E("input"),mb=E("input"),po=E("p","aer"),otp=E("input"),pw=E("input"),p2=E("input"),ck=E("input"),er=E("p","aer"),rc=E("div");
 nm.type="text";nm.placeholder=T("आपका नाम","Your name");id.type="text";id.autocomplete="username";id.placeholder=up?"Email":T("ईमेल या मोबाइल नंबर","Email or mobile number");mb.type="tel";mb.placeholder=T("मोबाइल नंबर (10 अंक)","Mobile number (10 digits)");otp.type="text";otp.inputMode="numeric";otp.maxLength=6;otp.placeholder=T("6 अंकों का OTP","6-digit OTP");otp.hidden=true;
@@ -1170,7 +1170,7 @@ pw.type="password";pw.autocomplete=up?"new-password":"current-password";pw.place
 const ph=up&&meth==="ph";
 if(up){const mt=E("div","autabs");[["em","📧 "+T("ईमेल","Email")],["ph","📱 "+T("मोबाइल","Mobile")]].forEach(([m,l])=>{const x=E("button","",l);x.setAttribute("aria-pressed",meth===m);x.onclick=()=>{meth=m;form()};mt.appendChild(x)});c.append(mt,nm);
 if(ph){const so=E("button","chip",T("📨 OTP भेजें","📨 Send OTP"));so.onclick=async()=>{po.textContent="";const d=nd(mb.value),n0=mb.value.replace(/\D/g,"").length;if(!/^[6-9]\d{9}$/.test(d)){po.textContent=T("मोबाइल नंबर 10 अंकों का होना चाहिए (6 से 9 से शुरू)। आपने "+n0+" अंक लिखे हैं।","Mobile number must be 10 digits (starting 6-9). You typed "+n0+" digits.");return}po.textContent=T("OTP भेजा जा रहा है…","Sending OTP…");
-try{if(!rvf)rvf=new firebase.auth.RecaptchaVerifier(rc,{size:"invisible"});cf=await A.signInWithPhoneNumber("+91"+d,rvf);otp.hidden=false;po.textContent=T("✅ OTP भेज दिया गया, नीचे लिखें","✅ OTP sent, enter it below")}catch(e){po.textContent=msg(e)+(e.code?" ("+e.code+")":"");try{rvf.clear()}catch(_){}rvf=null}};c.append(mb,so,po,otp,rc)}else c.appendChild(id)}
+try{if(rvf){try{rvf.clear()}catch(_){}rvf=null}rc.innerHTML="";const hd2=E("div");rc.appendChild(hd2);rvf=new firebase.auth.RecaptchaVerifier(hd2,{size:"invisible"});cf=await A.signInWithPhoneNumber("+91"+d,rvf);otp.hidden=false;po.textContent=T("✅ OTP भेज दिया गया, नीचे लिखें","✅ OTP sent, enter it below")}catch(e){po.textContent=msg(e)+(e.code?" ("+e.code+")":"");try{rvf.clear()}catch(_){}rvf=null}};c.append(mb,so,po,otp,rc)}else c.appendChild(id)}
 else c.appendChild(id);
 c.append(pw);if(up)c.appendChild(p2);
 if(up){const l=E("label");l.append(ck,E("span","",T("मैं सहमत हूँ कि मेरा नाम, ईमेल/मोबाइल और पढ़ाई की प्रगति एडमिन (रितु) को दिखेगी।","I agree that my name, email/mobile and study progress are visible to the admin (Ritu).")));c.appendChild(l)}
